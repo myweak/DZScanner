@@ -52,7 +52,7 @@ static BOOL isDisMiss;
     }else{
         if (![self.curFileName containsString:@"Documents"]) {
             NSString * path = [NSString BundlePath];
-            self.curFileName =[path stringByAppendingString:self.curFileName];
+            self.curFileName =[path stringByAppendingPathComponent:self.curFileName];
         }
     }
     
@@ -75,7 +75,7 @@ static BOOL isDisMiss;
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     /* 下载路径 */
-    NSString *pathDocument = [[NSString BundlePath] stringByAppendingString:@"LaoxiaoScan"];
+    NSString *pathDocument = [[NSString BundlePath] stringByAppendingPathComponent:LaoxiaoScan];
     
     // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -90,6 +90,15 @@ static BOOL isDisMiss;
     BOOL resultZip = [fileManager fileExistsAtPath:filePath];
     BOOL resultStl = [fileManager fileExistsAtPath:[self zipFieldFormatToStl]];
     if (resultZip || resultStl) {
+        if (!resultStl) {
+            BOOL succes = [SSZipArchive unzipFileAtPath:filePath toDestination:pathDocument];
+            if (!succes) {
+                showMessage(@"文件解压失败");
+                [SVProgressHUD dismiss];
+                return;
+            }
+        }
+        
         [self showJassonSTLViewWithFilePath:[self zipFieldFormatToStl]];
         return;
     }
@@ -142,7 +151,7 @@ static BOOL isDisMiss;
 // 将路径文件 zip 转化 stl
  - (NSString *)zipFieldFormatToStl{
      NSURL *url = [NSURL URLWithString:self.curFileName];
-    NSString *pathDocument = [[NSString BundlePath] stringByAppendingString:@"LaoxiaoScan"];
+    NSString *pathDocument = [[NSString BundlePath] stringByAppendingPathComponent:LaoxiaoScan];
 
     NSArray *arr = [url.lastPathComponent componentsSeparatedByString:@"."];
      if (arr) {

@@ -17,7 +17,7 @@
 //-----
 #ifdef Test_Env
 
-//    static NSString *const RrDBaseUrl = @"https://dev.goto-recovery.com";  //开发式服
+    static NSString *const RrDBaseUrl = @"https://dev.goto-recovery.com";  //开发式服
     // 主域名
 //      static NSString *const RrDBaseUrl = @"https://uat.goto-recovery.com";
 
@@ -25,11 +25,11 @@
 
 
 //生产环境
-    static NSString * const RrDBaseUrl = @ "https://api.rrdkf.com";
+//    static NSString * const RrDBaseUrl = @"https://api.rrdkf.com";
 
 #else
 //----------------------------生产环境star--------------------------------
-static NSString * const RrDBaseUrl = @ "https://api.rrdkf.com";
+static NSString * const RrDBaseUrl = @"https://api.rrdkf.com";
 //-----------------------------end-------------------------------
 
 #endif
@@ -50,6 +50,13 @@ static NSString *const Kagreement = @"https://rrdkf.com/about/agreement"; //   �
 
 static NSString *const KUM_AppKey    = @"5f2bb525d309322154758608"; //   友盟apppkey
 static NSString *const KJPUSH_AppKey = @"779344a5810fac17349dd36f"; //   极光 appkey
+
+static NSString *const LaoXiaoEGOCache = @"LaoXiaoEGOCache"; //   ego 缓存文件名
+static NSString *const LaoxiaoScan =     @"LaoxiaoScan"; //   3d文件保存文件名
+
+
+
+#define SRrDBaseUrl                 @"切换域名"
 
 
 #endif /* RrNetworkURL_h */

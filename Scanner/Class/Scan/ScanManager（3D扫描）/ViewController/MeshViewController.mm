@@ -465,7 +465,7 @@ namespace
     NSString* screenshotFilename = [NSString stringWithFormat:@"%@.jpg",timeName];
     // 获取本地目录
     NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES ) objectAtIndex:0];
-    cacheDirectory = [NSString stringWithFormat:@"%@/LaoxiaoScan", cacheDirectory];
+    cacheDirectory = [NSString stringWithFormat:@"%@/%@", cacheDirectory,LaoxiaoScan];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
 

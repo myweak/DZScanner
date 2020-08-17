@@ -176,7 +176,7 @@
 
 + (NSString *)BundlePath{
     NSString *bundle = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    return [bundle stringByAppendingString:@"/"];
+    return bundle;
 }
 
 //判断是否有中文

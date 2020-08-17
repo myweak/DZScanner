@@ -93,7 +93,15 @@ NSString* deviceName()
     [self.lock lock];
     
     self.headerDict = @{@"Authorization":@"Basic ZHotc2VydmljZTouZHpTZXJ2aWNlOmZlMGI1NzgyZjM4ZDRkNmNiOTZiZGY4NWI1YjNkMjEz"};
+    
+#ifdef DEBUG // 开发环境设置
+    NSString *url = [RrUserDefaults getStrValueInUDWithKey:SRrDBaseUrl];
+    self.baseUrlString = checkStringIsEmty(url) ? RrDBaseUrl:url;
+#else
     self.baseUrlString = RrDBaseUrl;
+#endif
+    
+    
     
     if (![self.baseUrlString isEqualToString:self.sessionManager.baseURL.absoluteString]) {
         
@@ -561,7 +569,7 @@ static NSString *AntDeviceKey = @"Ant-Device";
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *pathDocuments = [paths objectAtIndex:0];
     //创建缓存目录
-    NSString *createPath = [NSString stringWithFormat:@"%@/LaoXiaoEGOCache", pathDocuments];
+    NSString *createPath = [NSString stringWithFormat:@"%@/%@", pathDocuments,LaoXiaoEGOCache];
     // 判断文件夹是否存在，如果不存在，则创建
     if (![[NSFileManager defaultManager] fileExistsAtPath:createPath]) {
         NSFileManager *fileManager = [[NSFileManager alloc] init];

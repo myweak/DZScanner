@@ -26,7 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateAddressUrlPlist;
 
 
++ (NSArray *)getRrDBaseUrlArr; // 方便测试用 域名切换
 
+//清除app缓存
++ (void)clearAppAllCache;
+//获取app缓存大小
++ (CGFloat)getAppCacheAllSize;
 
 @end
 

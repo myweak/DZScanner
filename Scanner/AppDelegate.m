@@ -13,7 +13,7 @@
 #import "JPUSHService.h"
 #import <UserNotifications/UserNotifications.h>
 
-//#import <LLDebug.h>
+#import <LLDebug.h>
 
 #import "RrLonginModel.h"
 #import "RrAgreementView.h"
@@ -48,8 +48,8 @@
 {
     
 #ifdef DEBUG
-//    [[LLDebugTool sharedTool] startWorkingWithConfigBlock:^(LLConfig * _Nonnull config) {
-//    }];
+    [[LLDebugTool sharedTool] startWorkingWithConfigBlock:^(LLConfig * _Nonnull config) {
+    }];
 #else
 #endif
     

@@ -10,6 +10,8 @@
 #import "AreaPickerView.h"
 #import "MZAvatarImagePicker.h"
 #import "RrLonginModel.h"
+#import <SDImageCache.h>
+#import  <EGOCache/EGOCache.h>
 
 @interface LXObjectTools ()<OTAvatarImagePickerDelegate>
 @end
@@ -26,6 +28,44 @@
     return singleton;
 }
 
+
++ (NSArray *)getRrDBaseUrlArr{
+#ifdef DEBUG
+    return @[@"",
+             @"https://dev.goto-recovery.com",
+             @"https://uat.goto-recovery.com",
+             @"https://api.rrdkf.com",
+    ];
+#else
+    return @[@"https://api.rrdkf.com"];
+#endif
+}
+
++ (CGFloat)getAppCacheAllSize{
+    SDImageCache *cache = (SDImageCache *)[[SDWebImageManager sharedManager] imageCache];
+    NSInteger  size = [cache totalDiskSize];
+    NSInteger  disk = [cache totalDiskCount];
+    
+    CGFloat  LaoxiaoScanSise = [LaoxiaoScan getFolderNameOfSize];
+    CGFloat  LaoXiaoEGOCacheSize = [LaoXiaoEGOCache getFolderNameOfSize];
+    
+    CGFloat imageSize = (size +disk)/(1024*1024);
+    CGFloat cacheSize = imageSize + LaoxiaoScanSise +LaoXiaoEGOCacheSize;
+    
+    return cacheSize;
+}
++ (void)clearAppAllCache{
+    [[EGOCache globalCache] clearCache];
+    [LaoxiaoScan clearFolderNameAtCache];
+    [LaoXiaoEGOCache clearFolderNameAtCache];
+    SDImageCache *cache = (SDImageCache *)[[SDWebImageManager sharedManager] imageCache];
+    ///  清除内存缓存
+    [cache clearMemory];
+    [cache clearDiskOnCompletion:^{
+    }];
+
+
+}
 
 
 // 更新地址url 省市区

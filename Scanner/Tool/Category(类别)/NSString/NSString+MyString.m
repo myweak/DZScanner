@@ -1017,4 +1017,36 @@
     return targetString;
 }
 
+- (long long)getfilePathOfSize
+{
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:self]){
+        return [[manager attributesOfItemAtPath:self error:nil] fileSize];
+    }
+    return 0;
+}
+- (float)getFolderNameOfSize
+{
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSString *folderPath = [[NSString BundlePath] stringByAppendingPathComponent:self];
+    if (![manager fileExistsAtPath:folderPath]) return 0;
+    NSEnumerator *childFilesEnumerator = [[manager subpathsAtPath:folderPath] objectEnumerator];
+    NSString* fileName;
+    long long folderSize = 0;
+    while ((fileName = [childFilesEnumerator nextObject]) != nil)
+    {
+        NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
+        folderSize += [fileAbsolutePath getfilePathOfSize];
+    }
+    return folderSize/(1024.0*1024.0);
+}
+
+- (void)clearFolderNameAtCache{
+    NSFileManager* manager = [NSFileManager defaultManager];
+     NSString *folderPath = [[NSString BundlePath] stringByAppendingPathComponent:self];
+    if ([manager fileExistsAtPath:folderPath]){
+        [manager removeItemAtPath:folderPath error:nil];
+    };
+}
+
 @end

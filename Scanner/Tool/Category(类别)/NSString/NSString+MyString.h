@@ -169,4 +169,9 @@ static inline NSString *NAStringFromDate(NSString *dateFormat, NSDate *date) {
 // 移除所有空格、换行字符 用于从通讯录拷贝电话登录带有特殊的字符
 - (NSString *)stringWithoutSpaceAndEnter;
 
+//根据文件名获取大小
+- (float)getFolderNameOfSize;
+//根据文件名清除 文件
+- (void)clearFolderNameAtCache;
+
 @end

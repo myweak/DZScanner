@@ -14,15 +14,17 @@
 #define SSuggestion_title           @"问题反馈"
 #define SOutLogin_title             @"退出登录"
 
+
 #import "RrSettingVC.h"
 #import "RrCodeValidationVC.h"  //  获取验证码VC --> 忘记密码 VC
 #import "RrSettingJPushVC.h"
 #import "RrSettingAboutVC.h"
 #import "RrSuggestionVC.h"
 
+
 @interface RrSettingVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *dataTitleArr;
+@property (nonatomic, strong) NSMutableArray *dataTitleArr;
 
 @end
 
@@ -30,17 +32,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.dataTitleArr = @[
-        KCell_Space,
-        SPushMessage_title,
-        SAbout_title,
-        KCell_Space,
-//        SCahced_title,
-        SChangeWord_title,
-        SSuggestion_title,
-        KCell_Space,
-        SOutLogin_title,
-    ];
+    self.dataTitleArr = [NSMutableArray arrayWithArray:@[
+            KCell_Space,
+            SPushMessage_title,
+            SAbout_title,
+            KCell_Space,
+            SCahced_title,
+            SChangeWord_title,
+            SSuggestion_title,
+            KCell_Space,
+            SOutLogin_title,
+        ]];
+    
+    #ifdef DEBUG
+    [self.dataTitleArr addObject:KCell_Space];
+    [self.dataTitleArr addObject:SRrDBaseUrl];
+#else
+    #endif
+    
+    
     [self.tableView registerNibString:NSStringFromClass([RrCommonRowCell class]) cellIndentifier:RrCommonRowCell_ID];
     [self.view addSubview:self.tableView];
     
@@ -83,7 +93,7 @@
         cell.bottonLineView.hidden = NO;
         cell.pushImageView.hidden = YES;
         [cell.contenViewBg bezierPathWithRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadius:7.0f];
-        
+        cell.rightLabel.text = [NSString stringWithFormat:@"%.2fM",[LXObjectTools getAppCacheAllSize]];
     }else if ([title isEqualToString:SChangeWord_title]) {
         cell.bottonLineView.hidden = NO;
     }else if ([title isEqualToString:SSuggestion_title]) {
@@ -95,6 +105,10 @@
         cell.centerLabel.text = title;
         cell.centerLabel.textColor = [UIColor c_redColor];
         [cell.contenViewBg bezierPathWithRoundingCorners:UIRectCornerAllCorners cornerRadius:7.0f];
+    }else if ([title isEqualToString:SRrDBaseUrl]) {
+        cell.rightLabel.text = [RrUserDefaults getStrValueInUDWithKey:SRrDBaseUrl];
+        cell.contenViewBg.backgroundColor = [UIColor yellowColor];
+        [cell.contenViewBg addCornerRadius:7.0f];
     }
     
     
@@ -113,10 +127,26 @@
         about.title = SAbout_title;
         [self.navigationController pushViewController:about animated:YES];
     }else if ([title isEqualToString:SCahced_title]) {
-//        [[[SDWebImageManager sharedManager] imageCache] getSize];
-//        [[[SDWebImageManager sharedManager] imageCache] getDiskCount];
+        [self AlertWithTitle:@"提示" message:@"是否清除所有缓存" andOthers:@[@"取消",@"确认"] animated:YES action:^(NSInteger index) {
+            if (index == 1) {
+                [LXObjectTools clearAppAllCache];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                });
+            }
+        }];
+//        [SDWebImageManager.sharedManager.imageCache
+//
+//        culateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
+//
+//           }];
+//        [SDWebImageManager.sharedManager.imageCache ]
+
+//        [[[SDWebImageManager sharedManager] imageCache] totalDiskSize];
+//        [[[SDWebImageManager sharedManager] imageCache] totalDiskCount];
 //        [[[SDWebImageManager sharedManager] imageCache] clearMemory];
 //        [[[SDWebImageManager sharedManager] imageCache] clearDisk];
+        
     }else if ([title isEqualToString:SChangeWord_title]) {
         RrCodeValidationVC *codeVc =[RrCodeValidationVC new];
         codeVc.phoneNum = aUser.phone;
@@ -130,6 +160,21 @@
         RrSuggestionVC *sugVc = [RrSuggestionVC new];
         sugVc.title = SSuggestion_title;
         [self.navigationController pushViewController:sugVc animated:YES];
+    }else if ([title isEqualToString:SRrDBaseUrl]){
+            
+            #ifdef DEBUG
+           NSArray *arr = [LXObjectTools getRrDBaseUrlArr];
+              [self ActionSheetWithTitle:@"更换域名" message:@"debug状态" destructive:@"取消" destructiveAction:^(NSInteger index) {
+                  
+              } andOthers:arr animated:YES action:^(NSInteger index) {
+                  if (index != 0) {
+                      [RrUserDefaults saveStrValueInUD:arr[index] forKey:SRrDBaseUrl];
+                      exit(0);
+                  }
+              }];
+#else
+            #endif
+  
     }
 }
 
