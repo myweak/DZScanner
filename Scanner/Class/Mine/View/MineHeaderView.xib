@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MineHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="1090" height="193"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="topRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_top_bg" translatesAutoresizingMaskIntoConstraints="NO" id="ZKU-LS-yLV">
+                    <rect key="frame" x="17" y="0.0" width="1056" height="193"/>
+                </imageView>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="x4A-3r-Fov">
+                    <rect key="frame" x="489.5" y="26" width="111" height="111"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="111" id="g9Z-6f-RTi"/>
+                        <constraint firstAttribute="height" constant="111" id="mlc-O9-54T"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="self.layer.cornerRadius">
+                            <real key="value" value="55.5"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="self.layer.masksToBounds" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="糖橙定制" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UN3-TR-GAZ">
+                    <rect key="frame" x="504" y="149" width="82" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <color key="textColor" red="0.0039215686274509803" green="0.0039215686274509803" blue="0.0039215686274509803" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="ZKU-LS-yLV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="17" id="0Uf-Fu-nDO"/>
+                <constraint firstItem="UN3-TR-GAZ" firstAttribute="centerX" secondItem="x4A-3r-Fov" secondAttribute="centerX" id="FO3-fC-zqy"/>
+                <constraint firstAttribute="trailing" secondItem="ZKU-LS-yLV" secondAttribute="trailing" constant="17" id="GWO-yq-qAf"/>
+                <constraint firstItem="x4A-3r-Fov" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="26" id="KA0-c1-FRq"/>
+                <constraint firstItem="UN3-TR-GAZ" firstAttribute="top" secondItem="x4A-3r-Fov" secondAttribute="bottom" constant="12" id="X6v-fF-naa"/>
+                <constraint firstAttribute="bottom" secondItem="ZKU-LS-yLV" secondAttribute="bottom" id="odp-2f-rwN"/>
+                <constraint firstItem="ZKU-LS-yLV" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="wUl-A7-hLr"/>
+                <constraint firstItem="x4A-3r-Fov" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="xZZ-xP-uHx"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="headImageView" destination="x4A-3r-Fov" id="Ffb-EB-sAx"/>
+                <outlet property="imageViewBg" destination="ZKU-LS-yLV" id="ZDi-Tz-fSe"/>
+                <outlet property="nameLabel" destination="UN3-TR-GAZ" id="j93-EZ-uMo"/>
+            </connections>
+            <point key="canvasLocation" x="83.7890625" y="-41.015625"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="login_top_bg" width="1440" height="416"/>
+    </resources>
+</document>

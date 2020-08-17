@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RrEditeTitleVc">
+            <connections>
+                <outlet property="mainTitleLabel" destination="Cvc-at-sdB" id="x22-63-rgO"/>
+                <outlet property="textField" destination="BYP-71-B3I" id="8BM-Vx-izp"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="byf-Ne-pRd">
+                    <rect key="frame" x="76" y="94" width="872" height="73"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="手机号:  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cvc-at-sdB">
+                            <rect key="frame" x="17" y="0.0" width="69.5" height="73"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入手机号码" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BYP-71-B3I">
+                            <rect key="frame" x="94.5" y="0.0" width="760.5" height="73"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ntg-bl-39A" userLabel="lineView">
+                            <rect key="frame" x="0.0" y="72.5" width="288.5" height="0.5"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.91372549020000005" green="0.91372549020000005" blue="0.91372549020000005" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="BYP-71-B3I" firstAttribute="top" secondItem="byf-Ne-pRd" secondAttribute="top" id="3J6-Yd-kri"/>
+                        <constraint firstItem="Cvc-at-sdB" firstAttribute="leading" secondItem="byf-Ne-pRd" secondAttribute="leading" constant="17" id="7AE-qs-q3F"/>
+                        <constraint firstItem="Cvc-at-sdB" firstAttribute="top" secondItem="byf-Ne-pRd" secondAttribute="top" id="MPt-tQ-sVl"/>
+                        <constraint firstAttribute="bottom" secondItem="Cvc-at-sdB" secondAttribute="bottom" id="QOM-bd-U4m"/>
+                        <constraint firstAttribute="bottom" secondItem="BYP-71-B3I" secondAttribute="bottom" id="VuV-i9-d4k"/>
+                        <constraint firstItem="BYP-71-B3I" firstAttribute="leading" secondItem="Cvc-at-sdB" secondAttribute="trailing" constant="8" id="hJf-Bg-cyP"/>
+                        <constraint firstAttribute="height" constant="73" id="oTT-FP-id0"/>
+                        <constraint firstAttribute="trailing" secondItem="BYP-71-B3I" secondAttribute="trailing" constant="17" id="vDv-Wq-bbh"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="self.layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="self.layer.cornerRadius">
+                            <integer key="value" value="7"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0jx-Ie-jQq">
+                    <rect key="frame" x="76" y="210" width="872" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="Y8j-WT-t3R"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <state key="normal" title="确认" backgroundImage="login_btn_bg">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="changeBtnAction:" destination="-1" eventType="touchUpInside" id="fz7-8f-7XT"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <constraints>
+                <constraint firstItem="byf-Ne-pRd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="76" id="EKm-9p-iXN"/>
+                <constraint firstItem="0jx-Ie-jQq" firstAttribute="top" secondItem="byf-Ne-pRd" secondAttribute="bottom" constant="43" id="JYH-po-VGd"/>
+                <constraint firstItem="byf-Ne-pRd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="94" id="K61-nO-e0e"/>
+                <constraint firstAttribute="trailing" secondItem="byf-Ne-pRd" secondAttribute="trailing" constant="76" id="M8b-lX-aSH"/>
+                <constraint firstItem="0jx-Ie-jQq" firstAttribute="leading" secondItem="byf-Ne-pRd" secondAttribute="leading" id="Tji-HK-H1d"/>
+                <constraint firstItem="0jx-Ie-jQq" firstAttribute="trailing" secondItem="byf-Ne-pRd" secondAttribute="trailing" id="qSZ-c6-Mpn"/>
+            </constraints>
+            <point key="canvasLocation" x="138.8671875" y="111.71875"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="login_btn_bg" width="1054" height="50"/>
+    </resources>
+</document>

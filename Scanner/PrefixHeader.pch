@@ -1,0 +1,27 @@
+//
+//  PrefixHeader.pch
+//  Scanner
+//
+//  Created by rrdkf on 2020/6/24.
+//  Copyright © 2020 rrdkf. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+
+
+#ifdef __OBJC__
+
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "Tool/PrefixPCH/RrHeader.h"
+    #import "Tool/PrefixPCH/RrDefine.h"
+    #import "Tool/PrefixPCH/RrTool.h"
+    #import "Tool/PrefixPCH/UtilsMacros.h"
+    #import "Tool/PrefixPCH/DataModelPCH.h"
+    #import "NetWork/RrNetworkURL.h"
+    #import "LXObjectTools.h"
+
+#endif
+#endif /* PrefixHeader_pch */
