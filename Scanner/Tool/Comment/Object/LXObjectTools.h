@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 //获取app缓存大小
 + (CGFloat)getAppCacheAllSize;
 
++ (void)initUMConfig; //添加友盟统计
+//+ (void)jPushInitWithdelegate;// 极光初始化
+
 @end
 
 NS_ASSUME_NONNULL_END

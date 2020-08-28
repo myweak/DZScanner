@@ -7,7 +7,7 @@
 //
 
 #import "RrChangeWordVC.h"
-
+#import "RrSettingVC.h"
 @interface RrChangeWordVC ()
 @property (weak, nonatomic) IBOutlet UIView *oneViewBg;
 @property (weak, nonatomic) IBOutlet UIView *twoViewBg;
@@ -16,6 +16,8 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *textFieldOne;
 @property (weak, nonatomic) IBOutlet UITextField *textfieldTwo;
+@property (weak, nonatomic) IBOutlet UIButton *enSourceBtnOne;//眼睛
+@property (weak, nonatomic) IBOutlet UIButton *enSourceBtTwo;//眼睛
 
 @end
 
@@ -24,40 +26,68 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
-      
-   if (![self.textFieldOne isFirstResponder]) {
-       [self.textFieldOne becomeFirstResponder];
+    
+    if (![self.textFieldOne isFirstResponder]) {
+        [self.textFieldOne becomeFirstResponder];
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [super viewWillDisappear:animated];
-//    [MobClick beginLogPageView:@"修改密码"];
-
+    //    [MobClick beginLogPageView:@"修改密码"];
+    
 }
 
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     [self.view endEditing:YES];
-//    [MobClick endLogPageView:@"修改密码"];
-
-
+    //    [MobClick endLogPageView:@"修改密码"];
+    
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    [self.oneViewBg addLine_bottom];
-    [self.twoViewBg addLine_bottom];
+    [self.oneViewBg addLine:CGRectMake(0, self.oneViewBg.height, KFrameWidth-120*2, 0.5)];
+    [self.twoViewBg addLine:CGRectMake(0, self.twoViewBg.height, KFrameWidth-120*2, 0.5)];
     [self.oneLabel changeAligLeftAndRight];
-    self.textFieldOne.secureTextEntry = NO;
+    self.textFieldOne.secureTextEntry = YES;
     self.textFieldOne.keyboardType =  UIKeyboardTypeNumberPad;
-    self.textfieldTwo.secureTextEntry = NO;
+    self.textfieldTwo.secureTextEntry = YES;
     self.textfieldTwo.keyboardType =  UIKeyboardTypeNumberPad;
-
+    
+    NSMutableArray *navArr = [NSMutableArray array];
+    for (UIViewController *VC in self.navigationController.viewControllers) {
+        if ([VC isKindOfClass:[LoginVC class]]){
+            [navArr addObject:VC];
+        }else if([VC isKindOfClass:[RrSettingVC class]]){
+            [navArr addObject:VC];
+        }else if([VC isKindOfClass:[RrChangeWordVC class]]){
+            [navArr addObject:VC];
+        }else if([VC isKindOfClass:[MineViewController class]]){
+            [navArr addObject:VC];
+        }
+    }
+    self.navigationController.viewControllers = navArr;
+    
+    
 }
+//眼睛
+- (IBAction)ensoureBtnAction:(id)sender {
+    if(sender == self.enSourceBtnOne){
+        BOOL b = !self.enSourceBtnOne.selected;
+        self.enSourceBtnOne.selected = b;
+        self.textFieldOne.secureTextEntry = !b;
+    }else{
+        BOOL b = !self.enSourceBtTwo.selected;
+        self.enSourceBtTwo.selected = b;
+        self.textfieldTwo.secureTextEntry = !b;
+    }
+}
+
 // 返回按钮
 - (IBAction)popBtnAction:(id)sender {
     [self.view endEditing:YES];
@@ -66,7 +96,7 @@
 //保存
 - (IBAction)saveBtnAction:(id)sender {
     [self.view endEditing:YES];
-     if (![self.textFieldOne.text isEqualToString:self.textfieldTwo.text]) {
+    if (![self.textFieldOne.text isEqualToString:self.textfieldTwo.text]) {
         showMessage(@"密码不一致");
         return;
     }

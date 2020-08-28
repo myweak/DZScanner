@@ -44,9 +44,34 @@
 
 @implementation RrPostOrderListDetailVC
 
+- (void)dealloc{
+
+    self.addPView.manger = nil;
+    self.addPView = nil;
+    self.addPostCerView.manger = nil;
+    self.addPostCerView = nil;
+    self.addView_scan.addPView.manger = nil;
+    self.addView_scan = nil;
+    self.addPhoneView = nil;
+    self.tableView = nil;
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [MobClick beginLogPageView:@"商品定制下单页"]; //("Pagename"为页面名称，可自定义)
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [MobClick endLogPageView:@"商品定制下单页"];
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self getAdressListUrl];
+
     [self addTableView];
     
     //初始化数据
@@ -55,7 +80,6 @@
     self.postModel.payType = @(1); // 默认支付方式
     self.postCerCll_h = 230;
     
-    [self getAdressListUrl];
     
     @weakify(self);
     UIButton *btn = [self addBottomBtnWithTitle:@"提交" actionBlock:^(UIButton * _Nonnull btn) {
@@ -68,6 +92,7 @@
     
     
 }
+
 - (NSMutableArray *)scanArr{
     if (!_scanArr) {
         _scanArr = [NSMutableArray array];
@@ -271,6 +296,7 @@
         [_addPhoneView addSubview:titleLabel];
         @weakify(self)
         AddPhotoView *addPView = [[AddPhotoView alloc] initWithFrame:CGRectMake(iPH(20), titleLabel.bottom+ iPH(18), _addPhoneView.width -iPH(20)*2, iPH(85))];
+        addPView.isCanEdite = YES;
         addPView.complemntBlock = ^(AddPhotoView *photoView) {
             @strongify(self)
             self.addPhoneView.height = photoView.bottom + iPH(31);
@@ -378,7 +404,7 @@
        if ([self.addPostCerView.manger.currentAssets count] == 0){
            showMessage(@"请选择上传支付凭证");
            return;
-       }else if(checkStringIsEmty(self.postModel.AactualReceipts)){
+       }else if(checkStringIsEmty(self.postModel.AactualReceipts) || [self.postModel.AactualReceipts floatValue] <=0){
             showTopMessage(@"请填写线下支付金额");
             return;
         }
@@ -387,10 +413,11 @@
     if([self.addPView.manger.currentAssets count] == 0){
         showMessage(@"请上传您的测量数据");
         return;
-    }else if(self.scanArr.count == 0){
-        showMessage(@"请上传您3D扫描");
-        return;
     }
+//    else if(self.scanArr.count == 0){
+//        showMessage(@"请上传您3D扫描");
+//        return;
+//    }
     NSMutableArray *scanMutArr = [NSMutableArray array];
     [self.scanModelArr enumerateObjectsUsingBlock:^(ScanFileModel *model, NSUInteger idx, BOOL * _Nonnull stop) {
         [scanMutArr addObject:model.preview];
@@ -503,8 +530,10 @@
             }else{
                 if (mutArrUrl1.count != [self.addPostCerView.manger.currentAssets count]) {
                     showMessage(@"上传支付凭证失败");
+                    [SVProgressHUD dismiss];
                 }else  if (mutArrUrl2.count != [self.addPView.manger.currentAssets count]) {
                     showMessage(@"上传测量数据失败");
+                    [SVProgressHUD dismiss];
                 }
             }
         }else{
@@ -550,6 +579,9 @@
 
 //获取默认地址
 - (void)getAdressListUrl{
+//    if (!checkStrEmty(self.postModel.doctorAddr)) {
+//        return;
+//    }
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeNone];
     [[RRNetWorkingManager sharedSessionManager] getAddressList:@{KisAddEGOCache_Key:KisAddEGOCache_value} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         [SVProgressHUD dismiss];
@@ -557,14 +589,16 @@
             NSArray *arr =  responseModel.list;
             if ([arr count] >0) {
                 RrMineAddressMdoel *model = [arr firstObject];
-                NSString *addreStr = [NSString stringWithFormat:@"%@ %@ %@ %@",model.provinceDesc,model.cityDesc,model.areaDesc,model.addrDetail];
-                self.postModel.doctorAddr = addreStr;
-                self.postModel.addrId = model.ID;
-                @weakify(self)
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    @strongify(self)
-                    [self.tableView reloadData];
-                });
+                if ([model.defaultAddr intValue] == 1) {
+                    NSString *addreStr = [NSString stringWithFormat:@"%@ %@ %@ %@",model.provinceDesc,model.cityDesc,model.areaDesc,model.addrDetail];
+                    self.postModel.doctorAddr = addreStr;
+                    self.postModel.addrId = model.ID;
+                    @weakify(self)
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        @strongify(self)
+                        [self.tableView reloadData];
+                    });
+                }
             }
             
 

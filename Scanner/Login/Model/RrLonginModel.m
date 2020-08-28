@@ -8,6 +8,7 @@
 
 #import "RrLonginModel.h"
 
+static dispatch_once_t onceToken;
 @implementation RrLonginModel
 
 
@@ -51,6 +52,8 @@ Rr_CodingImplementation
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:KLoginDataTitle];
     _loginModel = nil;
+    self.access_token = @"";
+    [self clear];
     [defaults synchronize];
 }
 - (RrLonginModel *)loginModel{
@@ -58,6 +61,10 @@ Rr_CodingImplementation
         _loginModel = [RrLonginModel  readUserData];
     }
     return _loginModel;
+}
+
+- (void)clear {
+    onceToken   = 0;
 }
 
 @end

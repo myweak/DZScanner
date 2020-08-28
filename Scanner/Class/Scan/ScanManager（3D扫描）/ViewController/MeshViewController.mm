@@ -26,7 +26,7 @@
 #import "DModel.hpp"
 #include <iostream>
 #include <fstream>
-
+#import "CheckUserInfoVC.h"
 using namespace std;
 
 // Local Helper Functions
@@ -186,6 +186,7 @@ namespace
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [IQKeyboardManager sharedManager].enable = YES;
+
 }
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
@@ -199,6 +200,7 @@ namespace
 {
     [super viewWillAppear:animated];
     [IQKeyboardManager sharedManager].enable = NO;
+    self.hidenLeftTaBar = YES;
     if (_displayLink)
     {
         [_displayLink invalidate];
@@ -421,7 +423,7 @@ namespace
 {
 
     // 弹窗
-    UIAlertController *saveAlert = [UIAlertController alertControllerWithTitle:@"请给Structure Sensor模型命名！"
+    UIAlertController *saveAlert = [UIAlertController alertControllerWithTitle:@"请给模型命名！"
            message: nil
     preferredStyle:UIAlertControllerStyleAlert];
     
@@ -448,7 +450,7 @@ namespace
 
 - (void)saveFieldDataWithName:(NSString *)filedName{
     if (checkStrEmty(filedName)) {
-        showTopMessage(@"请输入Structure Sensor模型名称请！");
+        showTopMessage(@"请输入模型名称！");
         [self openMesh];
         return;
     }

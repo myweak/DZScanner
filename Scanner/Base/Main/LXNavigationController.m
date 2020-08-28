@@ -16,6 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[UINavigationBar appearance]setTranslucent:NO];
     
     [self.navigationBar setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 
@@ -39,22 +40,6 @@
 }
 
 
-//-(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-//{
-//    // 默认进去类型
-//    return   UIInterfaceOrientationLandscapeLeft;
-//}
-////
-////-(UIInterfaceOrientationMask)supportedInterfaceOrientations
-////{
-////    //当前支持的旋转类型
-////    return UIInterfaceOrientationMaskLandscapeLeft;
-////}
-- (BOOL)shouldAutorotate
-{
-    // 是否支持旋转
-    return YES;
-}
 
  
  

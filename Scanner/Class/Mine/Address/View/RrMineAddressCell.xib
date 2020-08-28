@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -44,7 +44,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="广东省 广州市 天河区 华景软件园A栋8888号" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2i8-wp-1uv">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="广东省 广州市 天河区 华景软件园A栋8888号" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2i8-wp-1uv">
                                 <rect key="frame" x="23" y="64.5" width="402" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
@@ -76,6 +76,7 @@
                             <constraint firstItem="J9n-Yw-xa8" firstAttribute="leading" secondItem="0xf-Yb-kKT" secondAttribute="leading" constant="23" id="Mvf-DS-jrV"/>
                             <constraint firstAttribute="bottom" secondItem="6K5-Oh-AXt" secondAttribute="bottom" id="N7w-jH-8kd"/>
                             <constraint firstItem="2i8-wp-1uv" firstAttribute="centerY" secondItem="VaD-Rr-MTF" secondAttribute="centerY" id="Scs-16-EPf"/>
+                            <constraint firstItem="2kW-Lr-N38" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2i8-wp-1uv" secondAttribute="trailing" constant="17" id="T9T-I4-L5k"/>
                             <constraint firstAttribute="trailing" secondItem="6K5-Oh-AXt" secondAttribute="trailing" id="TaA-Bm-oe4"/>
                             <constraint firstItem="6K5-Oh-AXt" firstAttribute="leading" secondItem="2kW-Lr-N38" secondAttribute="trailing" constant="1" id="Vds-7c-lfh"/>
                             <constraint firstAttribute="trailing" secondItem="2kW-Lr-N38" secondAttribute="trailing" constant="110" id="XqD-wX-n22"/>

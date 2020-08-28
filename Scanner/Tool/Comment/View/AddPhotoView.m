@@ -15,13 +15,14 @@
 @property (nonatomic, strong) NSMutableArray *imageUrlArr; // url 图片数据
 @property (nonatomic, strong) NSMutableArray *imageAssetArr; // 相册 asset 图片数据
 @property (nonatomic, strong) NSMutableArray *viewMutabArr;
+
 @end
 
 @implementation AddPhotoView
-@synthesize photoW = _photoW;
+@synthesize photoW = _photoW, maxPhotoNum = _maxPhotoNum;
 - (void)awakeFromNib{
+//    _isCanEdite = NO;
     [super awakeFromNib];
-    self.isCanEdite = YES;
 //    self.manger = [MZAssetsManager shareManager];
     self.photoImageArray = [NSMutableArray array];
     [self createUI];
@@ -37,7 +38,7 @@
 - (instancetype) initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        self.isCanEdite = YES;
+        _isCanEdite = NO;
 //        _manger = [MZAssetsManager shareManager];
         _photoImageArray = [NSMutableArray array];
         [self createUI];
@@ -51,7 +52,16 @@
     }
     return _viewMutabArr;
 }
-
+- (void)setMaxPhotoNum:(NSInteger)maxPhotoNum{
+    self.manger.maxPhotoNum = maxPhotoNum;
+    _maxPhotoNum = maxPhotoNum;
+}
+- (NSInteger)maxPhotoNum{
+    if (_maxPhotoNum == 0) {
+        _maxPhotoNum = 9;
+    }
+    return _maxPhotoNum;
+}
 - (void)createUI{
     self.backgroundColor = [UIColor whiteColor];
     @weakify(self)
@@ -82,6 +92,7 @@
 - (void)setImageUrl:(NSArray *)imageUrl{// 外部imageUrl
     _imageUrlArr = [NSMutableArray arrayWithArray:imageUrl];
     _photoImageArray = [NSMutableArray arrayWithArray:imageUrl];
+//    self.manger.maxPhotoNum = self.maxPhotoNum - imageUrl.count;
 //    [self updateAddPhotoView];
   
 }
@@ -90,6 +101,9 @@
 }
 
 - (void)setPhotoW:(CGFloat)photoW{
+    if (photoW == _photoW) {
+        return;
+    }
     _photoW = photoW;
     self.addBtn.width  = photoW ;
     self.addBtn.height = photoW ;
@@ -104,19 +118,32 @@
 }
 - (void)setIsCanEdite:(BOOL)isCanEdite{
     _isCanEdite = isCanEdite;
-    @weakify(self)
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @strongify(self)
-        self.addBtn.hidden = !isCanEdite;
-        [self.viewMutabArr enumerateObjectsUsingBlock:^(MZPostImageView  * objView, NSUInteger idx, BOOL * _Nonnull stop) {
-             objView.deleteButton.hidden = !isCanEdite;
-         }];
-    });
+    
+    self.addBtn.hidden = !isCanEdite;
+    [self.viewMutabArr enumerateObjectsUsingBlock:^(MZPostImageView  * objView, NSUInteger idx, BOOL * _Nonnull stop) {
+        objView.deleteButton.hidden = !isCanEdite;
+    }];
+    
 
 }
 
 #pragma mark - 更新。UI
+// 初始化 imageUrl 数据
+- (void)oneUpdateAddPhotoViewWithImageUrl:(NSArray *)imageUrl{
+    static BOOL b;
+    if (imageUrl.count == 0 || b) {
+        return;
+    }
+    @weakify(self)
+    b = YES;
+    [self setImageUrl:imageUrl];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        [self updateAddPhotoView];
+    });
 
+
+}
 - (void)updateAddPhotoView{
   
     CGFloat photo_W = self.photoW +15; // 图片大小
@@ -127,7 +154,7 @@
     NSInteger count_x = (max_W / d);
     
     if (self.isCanEdite) {
-        self.addBtn.hidden  = self.photoImageArray.count >= self.manger.maxPhotoNum;
+        self.addBtn.hidden  = self.photoImageArray.count >= self.maxPhotoNum;
     }else{
         self.addBtn.hidden  = YES;
     }
@@ -143,13 +170,16 @@
         }
     }];
     
-    
+    self.manger.maxPhotoNum = self.maxPhotoNum - self.imageUrlArr.count;
+
     for (int i = 0; i<self.photoImageArray.count; i++) {
         NSInteger row = i%count_x;
         MZPostImageView *imageView;
         if ( i >= self.viewMutabArr.count) {
             imageView = [[MZPostImageView alloc] initWithFrame:CGRectMake( (photo_W+space_x)*row, i/count_x *(photo_W+space_y), photo_W, photo_W)];
             [self.viewMutabArr addObject:imageView];
+            [self addSubview:imageView];
+
         }else{
             imageView =  self.viewMutabArr[i];
         }
@@ -157,7 +187,7 @@
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.clipsToBounds = YES;
         imageView.tag = i;
-        [self addSubview:imageView];
+//        [self addSubview:imageView];
 //        [imageView addDeleteButton];
         imageView.deleteButton.hidden = !self.isCanEdite;
                 
@@ -290,8 +320,9 @@
         @strongify(self)
         if ([obj isKindOfClass:[UIImage class]]) {
             // 相册图片
+            NSInteger assetIndex = idx-self.imageUrlArr.count;
             YBIBImageData *data = [YBIBImageData new];
-            data.imagePHAsset = self.manger.currentAssets[idx];
+            data.imagePHAsset = self.manger.currentAssets[assetIndex];
             data.projectiveView = imageView;
             [datas addObject:data];
             return;

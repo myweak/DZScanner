@@ -160,7 +160,7 @@
             self.addreModel.cityDesc = cityMdoel.areaName;
             self.addreModel.areaDesc = areaModel.areaName;
             
-            self.addressTextField.text = [NSString stringWithFormat:@"%@ %@ %@",provinceModel.areaName,cityMdoel.areaName,areaModel.areaName];
+            self.addressTextField.text = [NSString stringWithFormat:@"%@ %@ %@",provinceModel.areaName,cityMdoel.areaName,checkStrEmty(areaModel.areaName)?@"":areaModel.areaName];
         }] show];
     }else  if ([title isEqualToString:SDelectAddre_title]) {
         [self AlertWithTitle:@"温馨提示" message:@"是否删除该地址？"  andOthers:@[@"取消",@"确认"] animated:YES action:^(NSInteger index) {
@@ -187,6 +187,7 @@
             return NO;
         }
         self.addreModel.phone =  text;
+        return [text containsOnlyNumbers];
     }
     return YES;
 }
@@ -207,7 +208,7 @@
     }else if (checkStrEmty(self.addressTextField.text)) {
         showTopMessage([NSString stringWithFormat:@"%@%@",@"请选择",SAddress_title]);
         return;
-    }else if (checkStrEmty(self.addreModel.areaDesc)) {
+    }else if (checkStrEmty(self.addreModel.addrDetail)) {
         showTopMessage(@"请填写详细地址");
         return;
     }
@@ -249,7 +250,7 @@
     return parameter;
 }
 
-// 添加地址
+// 添加地址 
 - (void)postAddGoodsAddressUrl{
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];

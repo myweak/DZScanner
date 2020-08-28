@@ -54,7 +54,6 @@
     // mainVC -> 左边主视图，nav1 -> 是右边对应的详情控制器
 
     self.viewControllers = @[tabar,nav2];
-    NSLog(@"%@",self.viewControllers);
     self.vcs = @[nav1,nav2,nav3];
     
     self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;

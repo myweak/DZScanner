@@ -72,8 +72,12 @@
     } else {
         [self.picker setSourceType:sourceType];
         [self.picker setAllowsEditing:self.canEdit];
+        [self.picker.navigationBar setTranslucent:NO];
+        if (@available(iOS 11, *)) {
+                UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
+
+        }
         [self.rootViewController presentViewController:self.picker animated:YES completion:^{}];
-//        [UINavigationController setDefaultApprence];
     }
     
     self.canEdit = YES;
@@ -81,6 +85,13 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    if (@available(iOS 11, *)) {
+
+            UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+
+    }
+
+
 //    [UINavigationController applyDefaultApprence];
     [picker dismissViewControllerAnimated:YES completion:^{
         UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
@@ -92,7 +103,7 @@
                 self.shouldSave = NO;
                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
             }
-            [_delegate getImageFromWidget:image];
+            [self->_delegate getImageFromWidget:image];
         }
     }];
 }

@@ -66,8 +66,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"订单详情";
+    
     self.dataArr = [NSMutableArray arrayWithArray:@[KUserInfo,KData,KScan,KProduct,KOrderConten,KCell_Space,
     ]];
+    [self getUserChckeOrderDetailUrl];
+    
+    [self addTabelView];
+    [self.view addSubview:self.notNetWorkView];
     
     @weakify(self)
     [self.notNetWorkView.tapViewBg handleTap:^(CGPoint loc, UIGestureRecognizer *tapGesture) {
@@ -75,7 +80,6 @@
         [self getUserChckeOrderDetailUrl];
     }];
     
-    [self getUserChckeOrderDetailUrl];
     self.postPayCerCll_h = 140+iPH(159);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserChckeOrderDetailUrl) name:KNotification_name_updateOrder_list object:nil];
@@ -208,12 +212,12 @@
     if (!_addView_pay) {
         _addView_pay = [[RrAddImageView alloc] initWithFrame:CGRectMake(17, 0, KFrameWidth-17*2, iPH(159)+70)];
         _addView_pay.titleLabel.text = KPay;
-        _addView_pay.addPView.photoW = iPH(159);
-        _addView_pay.addPView.manger.maxPhotoNum = 3;
+//        _addView_pay.addPView.isCanEdite = YES;
+        _addView_pay.addPView.maxPhotoNum = 3;
         @weakify(self)
         _addView_pay.complemntBlock = ^(RrAddImageView *photoView) {
             @strongify(self)
-            self.addView_pay.height = photoView.height +53;
+            self.addView_pay.height = photoView.height +18;
             [self.tableView reloadData];
         };
     }
@@ -330,20 +334,25 @@
         if (indexPath.row == 0) {
             return 156;
         }else{
+            if (!self.model) {
+                        return 185;
+                    }
             switch ([self.model.orderStatus intValue]) {
                 case 1:// 待完善
                 case 6://制作完成
                     return 185;
                 case 3://待付款
+                {
                     if ([self.model.payType intValue] == 1) {
                         return 185;
                     }
-                  return 110;
+                    return 110;
+                }
             }
-            
+            return 110;
             
         }
-        return 110;
+        return 185;
     }else if ([title isEqualToString:KOrderConten]) {
         return self.bottonLabelView.height;
     }
@@ -480,6 +489,7 @@
         }
         
     }else if ([title isEqualToString:KOrderConten]) {
+    
         MZCommonCell *cell = [MZCommonCell blankClearCell];
         [cell.contentView addSubview:self.bottonLabelView];
         return cell;
@@ -589,12 +599,14 @@
     if (checkStrEmty(self.model.outTradeNo)) {
         return;
     }
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     [[RRNetWorkingManager sharedSessionManager] putOrderPayNotifi:@{@"outTradeNo":self.model.outTradeNo} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         if (!error) {
             showMessage(@"已发送付款提醒");
         }else{
             showMessage(responseModel.msg);
         }
+        [SVProgressHUD dismiss];
     }, nil)];
     
 }
@@ -602,23 +614,22 @@
 //列表详情
 - (void)getUserChckeOrderDetailUrl{
     @weakify(self)
-    [SVProgressHUD showInfoWithStatus:@"加载中" maskType:SVProgressHUDMaskTypeNone];
-    [[RRNetWorkingManager sharedSessionManager] getUserChckeOrderDetail:@{KKey_1:self.outTradeNo,KisAddEGOCache_Key:KisAddEGOCache_value} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
+    [[RRNetWorkingManager sharedSessionManager] getUserChckeOrderDetail:@{KKey_1:self.outTradeNo} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         @strongify(self)
         if (!error) {
-            self.self.notNetWorkView.hidden = YES;
+            self.notNetWorkView.hidden = YES;
             self.model = (RrDidProductDeTailModel *)responseModel.item;
             [self dataConfigUI];
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self)
-                [self addTabelView];
-            });
-            if (!responseModel.isCashEQO) {
+                [self.tableView reloadData];
                 [SVProgressHUD dismiss];
-            }
+            });
+            
             
         }else{
-            self.self.notNetWorkView.hidden = NO;
+            self.notNetWorkView.hidden = NO;
             showMessage(responseModel.msg);
             [SVProgressHUD dismiss];
         }
@@ -629,10 +640,20 @@
 
 - (void)dataConfigUI{
     @weakify(self)
-    self.rightNaviBtn.hidden = YES;
+    self.rightNaviBtn.hidden = YES;////默认
+    self.addView_pay.addPView.isCanEdite = NO;//默认
+    self.addView_pay.addPView.photoW = iPH(159);//默认
+    self.payTextField.userInteractionEnabled = NO;//默认
+    //默认
+    self.payTextField.text = [NSString stringWithFormat:@"¥%@",self.model.AactualReceipts];
+    self.payTextField.textColor = [UIColor c_btn_Bg_Color];
+    self.payTextField.layer.borderColor = [UIColor clearColor].CGColor;
+
+    
     self.addView_data.addPView.imageUrl = [self.model.attachment componentsSeparatedByString:@","];
     self.addView_pay.addPView.imageUrl = [self.model.payImg componentsSeparatedByString:@","];
     
+    //--------------------------- 3D 扫描数据处理 star--------------------------------------------
     __autoreleasing NSMutableArray *scanMutArr = [NSMutableArray array];
     self.scanArrModelData = [NSMutableArray array];
     NSArray *scanArr = [self.model.otherAttachment componentsSeparatedByString:@","];
@@ -646,9 +667,22 @@
     }
     self.addView_scan.addPView.imageUrl = scanMutArr;
     
+    if (checkStrEmty(self.model.otherAttachment)) {//没有上传3D扫描文件
+        if ([self.dataArr containsObject:KScan]) {
+            [self.dataArr removeObject:KScan];
+        }
+    }else{
+        if (![self.dataArr containsObject:KScan]) {
+            [self.dataArr addObject:KScan];
+        }
+    }
+    //--------------------------- 3D 扫描数据处理 end--------------------------------------------
+    
+    
     //---------------------- 待完善 1-------------------------------
     if ([self.model.orderStatus intValue] == 1) { // 审核被驳回
         [self addRightNavigationBtn];
+        self.rightNaviBtn.hidden = NO;
         [self.rightNaviBtn setTitle:@"驳回原因" forState:UIControlStateNormal];
         [self.rightNaviBtn setImage:R_ImageName(@"ckeck_notifi") forState:UIControlStateNormal];
         [self.rightNaviBtn setTitleColor:[@"FF1010" getColor] forState:UIControlStateNormal];
@@ -657,40 +691,46 @@
     //------------------------ 待完善  end ----------------------------------
     
     
+
     
     //---------------------- 待支付 3-------------------------------
     if ([self.model.orderStatus intValue] == 3) { //用户提交订单时是线上支付--》待支付   // 可修改支付方式
         [self addRightNavigationBtn];
+        self.rightNaviBtn.hidden = NO;
         [self.rightNaviBtn setTitle:@"提交" forState:UIControlStateNormal];
         if (![self.dataArr containsObject:KPayType]) {
-            [self.dataArr insertObject:KPayType atIndex:4];
+            NSInteger insert = [self.dataArr indexOfObject:KOrderConten];
+            [self.dataArr insertObject:KPayType atIndex:insert];
         }
-        // 根据支付类型 更新 ui
-        [self updatePayTypeDataUI];
+        self.addView_pay.addPView.photoW = iPH(85);
+        self.addView_pay.addPView.isCanEdite = YES;
+        self.payTextField.userInteractionEnabled = YES;
+        self.payTextField.text = @"";
+        self.payTextField.textColor = [UIColor blackColor];
+        self.payTextField.layer.borderColor = [UIColor c_lineColor].CGColor;
         
     }else if([self.model.orderStatus intValue] == 2){//用户提交订单时是线下支付--》待审核
-        self.payTextField.text = [NSString stringWithFormat:@"¥%@",self.model.AactualReceipts];
-        self.payTextField.textColor = [UIColor c_btn_Bg_Color];
-        self.payTextField.layer.borderColor = [UIColor clearColor].CGColor;
-        self.payTextField.userInteractionEnabled = NO;
-        self.addView_pay.addPView.isCanEdite = NO;
-        if (![self.dataArr containsObject:KPay]) {
-            [self.dataArr insertObject:KPay atIndex:4];
+        if ([self.model.payType intValue] == 2) {//支付方式:1在线支付，2线下支付
+            if (![self.dataArr containsObject:KPay]) {
+                [self.dataArr insertObject:KPay atIndex:4];
+            }
         }
-        
     }
-    //----------------------------------------------------------
-    [self setOrerMesaageUI];
     
+    // 根据支付类型 更新 ui
+       [self updatePayTypeDataUI];
+    
+    //----------------------------------------------------------
     dispatch_async(dispatch_get_main_queue(), ^{
         @strongify(self)
+        [self setOrerMesaageUI];
+        
         [self.bottonLabelView updateConfigUI];
         [self.addView_data.addPView updateAddPhotoView];
         [self.addView_scan.addPView updateAddPhotoView];
         [self.addView_pay.addPView updateAddPhotoView];
-        
-        [self.tableView reloadData];
     });
+
 }
 
 //订单信息x
@@ -707,6 +747,9 @@
     NSString *title8 = [NSString stringWithFormat:@"%@%@",@"发货时间：",[self.model.expressTime dateStringFromTimeYMDHMS]];
     
     NSString *title9 = [NSString stringWithFormat:@"%@%@",@"备注：",self.model.remark];
+    
+    NSString *title10 = [NSString stringWithFormat:@"%@%@",@"收货时间：",[self.model.completeTime dateStringFromTimeYMDHMS]];
+
     
     NSMutableArray *itemArr = [NSMutableArray array];
     if (!checkStrEmty(self.model.partnerName)) {
@@ -736,6 +779,9 @@
     if (!checkStrEmty(self.model.remark)) {
         [itemArr addObject:title9];
     }
+    if (!checkStrEmty(self.model.completeTime)) {
+           [itemArr addObject:title10];
+       }
     self.bottonLabelView.itemLabelArr = itemArr;
     
 }
@@ -743,14 +789,15 @@
 // 根据支付类型 更新 ui
 - (void)updatePayTypeDataUI{
     if ([self.model.payType intValue] == 1) { //线上支付
-        self.rightNaviBtn.hidden = YES;
+//        self.rightNaviBtn.hidden = YES;
         if ([self.dataArr containsObject:KPay]) {
             [self.dataArr removeObject:KPay];
         }
     }else{//线下支付
-        self.rightNaviBtn.hidden = NO;
+//        self.rightNaviBtn.hidden = NO;
         if (![self.dataArr containsObject:KPay]) {
-            [self.dataArr insertObject:KPay atIndex:5];
+            NSInteger insert = [self.dataArr indexOfObject:KOrderConten];
+            [self.dataArr insertObject:KPay atIndex:insert];
         }
     }
 }

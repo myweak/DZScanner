@@ -14,6 +14,8 @@
 #define KLoginDataTitle @"登陆数据"
 #define KNaViTabarTitle @"左边标签栏"
 
+
+
 //通知
 #define KNotification_name_Scan                     @"3D扫描上传成功"
 #define KNotification_name_updateOrder_list         @"更新订单列表通知"
@@ -32,6 +34,7 @@ static  NSString * const KisAddEGOCache_Key    =    @"KisAddEGOCacheKey";
 static  NSString * const KisAddEGOCache_value  =    @"加此字典表示此地址需要缓存数据";
 
 
+
 //get请求不用拼接key，只要求value 顺序
 static const NSString * KKey_1  = @"get_Key_Key1";
 static const NSString * KKey_2  = @"get_Key_Key2";
@@ -47,6 +50,8 @@ static const NSString * KKey_5  = @"get_Key_Key5";
 
 
 static NSString *const kAlphaNum        = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+
 
 
 #endif /* DataModelPCH_h */

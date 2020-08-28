@@ -43,18 +43,25 @@
 - (void)dealloc{
     self.rightBtn = nil;
 }
-
+- (void)viewDidAppear:(BOOL)animated{
+//    self.tableView.width = KFrameWidth;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    if (self.type != CheckUserInfoVCType_mine) {
-        
-    }
-    for (UIViewController *VC in self.navigationController.viewControllers) {
-        NSLog(@"-----%@",VC);
-        if ([VC isKindOfClass:[LoginVC class]]){
-           
+    
+    if (self.type != CheckUserInfoVCType_push) {
+        NSMutableArray *navArr = [NSMutableArray array];
+        for (UIViewController *VC in self.navigationController.viewControllers) {
+            NSLog(@"-----%@",VC);
+            if ([VC isKindOfClass:[LoginVC class]]){
+                [navArr addObject:VC];
+            }else if([VC isKindOfClass:[CheckUserInfoVC class]]){
+                [navArr addObject:VC];
+            }else if([VC isKindOfClass:[MineViewController class]]){
+                [navArr addObject:VC];
+            }
         }
+        self.navigationController.viewControllers = navArr;
     }
     
     
@@ -77,7 +84,7 @@
     ];
     [self.view addSubview:self.tableView];
     [self.tableView registerNibString:NSStringFromClass([RrCommonRowCell class]) cellIndentifier:RrCommonRowCell_ID];
-
+    
     // 底部提交按钮
     if(self.type == CheckUserInfoVCType_unCheck ){
         @weakify(self);
@@ -113,16 +120,16 @@
 
 - (void)setRightNaviBtn{
     /**
-   firstInfoing = 0, // 0 基本信息待审核
-    firstInfoSuccess, // 1 基本信息审核通过
-    firstinfoUnSuceess, // 2 基本信息被驳回
-    infoChecking, // 3 完整信息待审核
-    infoCheckSuccee, // 4 完整信息审核通过
-    infoCheckUnSuccess, // 5 完整信息被驳回
-    withInfoing, // 6 关联经销商待审核
-    withInfoSuccess, // 7 关联经销商审核通过
-    withInfoUnSuccess, // 8关联经销商被驳回
-    noUserInfo, // 9 用户审核资料没有填写
+     firstInfoing = 0, // 0 基本信息待审核
+     firstInfoSuccess, // 1 基本信息审核通过
+     firstinfoUnSuceess, // 2 基本信息被驳回
+     infoChecking, // 3 完整信息待审核
+     infoCheckSuccee, // 4 完整信息审核通过
+     infoCheckUnSuccess, // 5 完整信息被驳回
+     withInfoing, // 6 关联经销商待审核
+     withInfoSuccess, // 7 关联经销商审核通过
+     withInfoUnSuccess, // 8关联经销商被驳回
+     noUserInfo, // 9 用户审核资料没有填写
      */
     NSString *rightTitleStr;
     NSString *rightImageStr;
@@ -162,7 +169,7 @@
     [self.rightBtn setImage:R_ImageName(rightImageStr) forState:UIControlStateNormal];
     [self.rightBtn setTitleColor:[@"FF1010" getColor] forState:UIControlStateNormal];
     self.rightBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 10);
-
+    
 }
 
 
@@ -189,7 +196,7 @@
         cell.backgroundColor = [UIColor mian_BgColor];
         [cell.contentView addSubview:self.imageBarView];
         [self.imageBarView addSubview:self.addPView];
-
+        
         return cell;
     }
     RrCommonRowCell *cell = [tableView dequeueReusableCellWithIdentifier:RrCommonRowCell_ID forIndexPath:indexPath];
@@ -263,12 +270,12 @@
         }else if([title isEqualToString:SMerchantsAccount_title]){
             self.model.companyCode = titleName;
         }
-        if ([title isEqualToString:SMerchantsAccount_title] &&  self.type == CheckUserInfoVCType_mine) { // 修改了 关联经销商
+        if ([title isEqualToString:SMerchantsAccount_title] &&  (self.type == CheckUserInfoVCType_mine || self.type == CheckUserInfoVCType_push)) { // 修改了 关联经销商
             [self.rightBtn setTitle:KChecking forState:UIControlStateNormal];
         }
     };
     
-    if (self.type == CheckUserInfoVCType_mine) {
+    if ((self.type == CheckUserInfoVCType_mine || self.type == CheckUserInfoVCType_push)) {
         if ([title isEqualToString:SMerchantsAccount_title]) {
             editVc.type = RrEditeTitleVcType_patchInfo;
             [self.navigationController pushViewController:editVc animated:YES];
@@ -279,7 +286,7 @@
             return;
         }
         [self.navigationController pushViewController:editVc animated:YES];
-
+        
     }
     
 }
@@ -288,10 +295,16 @@
 #pragma mark UI
 - (UITableView *)tableView{
     if (!_tableView) {//UITableViewStyleGrouped
+
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, KFrameWidth, KScreenHeight-64) style:UITableViewStylePlain];
         _tableView.rowHeight = UITableViewAutomaticDimension;
         _tableView.estimatedRowHeight = 120;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        if (@available(iOS 11.0, *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.tableHeaderView = [UIView new];
@@ -376,13 +389,13 @@
         showMessage(@"请填写姓名");
         return;
     }else if (checkStrEmty(self.model.dept)) {
-         showMessage(@"请填写科室");
-         return;
-     }else if (checkStrEmty(self.model.title)) {
-         showMessage(@"请填写职称");
-         return;
-     }
-    if ([self.addPView.manger.currentAssets count] == 0) {
+        showMessage(@"请填写科室");
+        return;
+    }else if (checkStrEmty(self.model.title)) {
+        showMessage(@"请填写职称");
+        return;
+    }
+    if ([self.addPView.manger.currentAssets count] == 0 && [self.addPView.imageUrl count] == 0) {
         showMessage(@"请上传证件照");
         return;
     }
@@ -397,12 +410,12 @@
     self.imageArr = [NSMutableArray arrayWithArray:self.addPView.imageUrl];
     // 七🐂 获取相册图片地址
     @weakify(self)
-    [[MZAssetsManager shareManager] uploadCurrentAssetsWithCompletion:^(BOOL succeed, id imageDatas, id videoDatas) {
+    [self.addPView.manger uploadCurrentAssetsWithCompletion:^(BOOL succeed, id imageDatas, id videoDatas) {
         @strongify(self)
         if (succeed) {
             if (imageDatas) {
                 [imageDatas enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                  NSString *url =  [obj valueForKey:@"path"];
+                    NSString *url =  [obj valueForKey:@"path"];
                     [self.imageArr addObject:[url imageUrlStr]];
                 }];
             }else{
@@ -426,15 +439,15 @@
     self.isChangeCertimg = NO;
     // 提交信息
     NSString *certimg = [imageArr componentsJoinedByString:@","];
-
+    
     NSMutableDictionary *parameter = [NSMutableDictionary dictionary];
     [parameter setValue:aUser.ID forKey:@"id"];
     [parameter setValue:self.model.name forKey:@"name"];
     [parameter setValue:self.model.dept forKey:@"dept"]; //科室
     [parameter setValue:self.model.title forKey:@"title"]; //职称
- //关联经销商编码
+    //关联经销商编码
     if (!checkStrEmty(self.model.companyCode)) {
-        [parameter setObject:@"companyCode" forKey:self.model.companyCode];
+        [parameter setObject:self.model.companyCode forKey:@"companyCode"];
     }
     [parameter setValue:certimg forKey:@"certimg"]; //从业资格图片URL ';'多图逗号隔开
     
@@ -450,7 +463,7 @@
             [self getUSerInfoURl];
         }
     }, nil)];
-
+    
 }
 
 

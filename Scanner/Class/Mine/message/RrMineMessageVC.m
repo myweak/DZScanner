@@ -60,7 +60,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-
+    
     return self.listArr.count;
 }
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView{
@@ -82,7 +82,7 @@
             titleLabel.textAlignment = NSTextAlignmentRight;
             titleLabel.right = KFrameWidth - 17;
             titleLabel.bottom = KCell_H+17;
-       
+            
         }
         titleLabel.text = @"已读";
         [cell.contentView addSubview:titleLabel];
@@ -172,7 +172,7 @@
         _tableView.tableFooterView = [UIView new];
         
         [_tableView registerNibString:NSStringFromClass([RrMineMessageCell class]) cellIndentifier:KRrMineMessageCell_ID];
-
+        
     }
     return _tableView;
 }
@@ -229,18 +229,18 @@
         }
     }
     self.listArr = [NSMutableArray array];
-
+    
     if (self.notReadArray.count >0) {
-            [self.listArr addObjectsFromArray:self.notReadArray];
-
+        [self.listArr addObjectsFromArray:self.notReadArray];
+        
     }
-   if (self.readArray.count >0) {
-       RrMineMessageModel *model  =  [RrMineMessageModel new];
-       model.msgStatus = @(1000); //已读 标题
-       [self.listArr addObject:model];
-       [self.listArr addObjectsFromArray:self.readArray];
+    if (self.readArray.count >0) {
+        RrMineMessageModel *model  =  [RrMineMessageModel new];
+        model.msgStatus = @(1000); //已读 标题
+        [self.listArr addObject:model];
+        [self.listArr addObjectsFromArray:self.readArray];
     }
-
+    
     
 }
 

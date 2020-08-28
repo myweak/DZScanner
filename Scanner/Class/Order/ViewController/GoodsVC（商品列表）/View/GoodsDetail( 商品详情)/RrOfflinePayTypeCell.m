@@ -21,8 +21,10 @@
     self.priceTextView.layer.cornerRadius = 7.0f;
     self.priceTextView.layer.borderColor = [UIColor c_lineColor].CGColor;
     self.priceTextView.layer.borderWidth = 0.5f;
-    
-    self.addPhotoView.manger.maxPhotoNum = 3;
+    self.priceTextView.scrollEnabled = NO;
+    self.priceTextView.delegate = self;
+    self.addPhotoView.isCanEdite = YES;
+    self.addPhotoView.maxPhotoNum = 3;
     
 }
 - (void)setPostModel:(RrDidProductDeTailModel *)postModel{
@@ -31,8 +33,10 @@
 
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    return [textField.text stringByReplacingCharactersInRange:range withString:string];
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+
+    return [textView shouldChangeCharactersInRange:range replacementString:text];
+
 }
 - (void)textViewDidChange:(UITextView *)textView{
     self.postModel.AactualReceipts =  textView.text;

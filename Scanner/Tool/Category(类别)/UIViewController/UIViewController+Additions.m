@@ -174,9 +174,10 @@
 
     MainTabBarVC *tabar = (MainTabBarVC *)KWindow.rootViewController;
      tabar.tabBarController.hiddenTabBar = hidenLeftTaBar;
+    [UserDataManager sharedManager].frame_width =  hidenLeftTaBar ? KScreenWidth:(KScreenWidth -KTabar_Width);
     self.view.width = hidenLeftTaBar ? KScreenWidth:(KScreenWidth -KTabar_Width);
-    [UserDataManager sharedManager].frame_width = (hidenLeftTaBar ? [[UIScreen mainScreen] bounds].size.width : ([[UIScreen mainScreen] bounds].size.width - KTabar_Width));
-    NSLog(@"%f",[UserDataManager sharedManager].frame_width );
+
+//    NSLog(@"<<<<%@>>>>=========>%f",NSStringFromClass([self class]),[UserDataManager sharedManager].frame_width );
 }
 
 

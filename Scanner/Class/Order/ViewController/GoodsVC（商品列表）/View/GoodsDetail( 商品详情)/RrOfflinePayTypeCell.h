@@ -6,6 +6,7 @@
 //  Copyright © 2020 rrdkf. All rights reserved.
 //
 #define KRrOfflinePayTypeCell_ID @"RrOfflinePayTypeCell_ID"
+
 #import <UIKit/UIKit.h>
 #import "AddPhotoView.h"
 #import "RrDidProductDeTailModel.h"

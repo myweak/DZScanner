@@ -12,13 +12,14 @@
 
 #import "RrSettingAboutVC.h"
 #import "BaseWebViewController.h"
+#import "AppModel.h"
 @interface RrSettingAboutVC ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataArr;
 @property (nonatomic, copy)   NSString *app_Name ;
 @property (nonatomic, copy)   NSString *app_Version ;
-
+@property (nonatomic, strong)  AppModel *versrionModel ;
 @end
 
 @implementation RrSettingAboutVC
@@ -44,6 +45,8 @@
     self.tableView.tableHeaderView = [self addHeadView];
     [self.view addSubview:self.tableView];
     
+    [self getAppVersionUrl];
+    
 }
 
 
@@ -67,6 +70,7 @@
         cell.rightLabel.hidden = NO;
         cell.rightLabel.text =  [NSString stringWithFormat:@"v%@",self.app_Version];
         cell.bottonLineView.hidden = NO;
+        cell.pushImageView.hidden = NO;
         [cell.contenViewBg addCornerRadius:7.0];
     }else if ([title isEqualToString:KPrivacy_name]){
         cell.mainTitleLabel.text = KPrivacy_name;
@@ -88,7 +92,23 @@
     BaseWebViewController *webView = [BaseWebViewController new];
     NSString *title = self.dataArr[indexPath.row];
 
-    if (([title isEqualToString:KPrivacy_name])) {
+    if (([title isEqualToString:KVersion_name])) {
+        if (!self.versrionModel) {
+            return;
+        }
+
+        NSString *app_Version = [self.app_Version appVersionNumberFormat];
+       NSString * version = [self.versrionModel.version appVersionNumberFormat];
+                             
+        if ([version floatValue] <= [app_Version floatValue]) {
+            showMessage(@"已经是最新版本");
+            return;
+        }
+        
+        
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.versrionModel.url] options:nil completionHandler:nil];
+        return;
+    }else if (([title isEqualToString:KPrivacy_name])) {
         webView.title = @"隐私政策";
         webView.url = Kprivacy;
     }else if([title isEqualToString:KAgreement_name]){
@@ -165,6 +185,18 @@
 }
 
 
+
+- (void)getAppVersionUrl{
+    NSString *device =[[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? @"IOS" :@"IPAD";
+    [[RRNetWorkingManager sharedSessionManager] getAppVersion:@{KKey_1:device} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
+        if (!error) {
+            self.versrionModel = (AppModel*)responseModel.item;
+        }else{
+            showMessage(responseModel.msg);
+        }
+        [SVProgressHUD dismiss];
+    }, [AppModel class])];
+}
 
 
 @end

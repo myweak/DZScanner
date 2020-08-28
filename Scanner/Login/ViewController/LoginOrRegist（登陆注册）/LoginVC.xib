@@ -10,6 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginVC">
             <connections>
                 <outlet property="accountBtn" destination="wsx-2u-Ugx" id="RdL-ED-lis"/>
+                <outlet property="accountNumLabel" destination="Xfm-EB-z2Z" id="MNI-la-Te0"/>
                 <outlet property="accountView" destination="4iP-o8-Hri" id="hWz-gc-cXI"/>
                 <outlet property="codeLoginBtn" destination="lb9-sb-sD2" id="gtL-vN-cm4"/>
                 <outlet property="codeView" destination="PE1-4v-nK7" id="kDQ-Wq-HUg"/>
@@ -18,6 +19,7 @@
                 <outlet property="forgotView_top" destination="DZ5-rt-0nJ" id="0p5-iW-Fjh"/>
                 <outlet property="forgoteView" destination="MUt-6G-k7J" id="rar-uw-Dgt"/>
                 <outlet property="getCodeBtn" destination="x2L-zy-DWF" id="fLi-O7-ugT"/>
+                <outlet property="iconImageView" destination="n4x-XR-2nN" id="YUQ-nU-yAU"/>
                 <outlet property="longinBtn" destination="GAB-lr-ds2" id="1mk-fW-sqg"/>
                 <outlet property="passTextField" destination="GFX-oa-yBM" id="wcI-J8-HuZ"/>
                 <outlet property="passView" destination="UCn-Pr-17m" id="xVF-r0-hSf"/>
@@ -283,8 +285,8 @@
         </view>
     </objects>
     <resources>
-        <image name="kejian-2" width="29" height="28"/>
-        <image name="kejian-3" width="29" height="21"/>
+        <image name="kejian-2" width="18" height="18"/>
+        <image name="kejian-3" width="18" height="18"/>
         <image name="login_btn_bg" width="1054" height="50"/>
         <image name="login_top_bg" width="1440" height="416"/>
         <image name="login_top_font" width="398" height="106"/>

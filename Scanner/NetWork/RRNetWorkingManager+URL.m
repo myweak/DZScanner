@@ -15,7 +15,7 @@
 }
 
 - (void)login:(id)parameter result:(RrResponseResultBlockModel *)resultBlock{
-    [self POST:@"/api-uaa/oauth/user/token" parameters:parameter result:resultBlock];
+    [self POSTBasicToken:YES URLString:@"/api-uaa/oauth/user/token" parameters:parameter result:resultBlock];
 }
 - (void)codeLogin:(id)parameter result:(RrResponseResultBlockModel *)resultBlock{
     [self POST:@"/api-uaa/oauth/code/token" parameters:parameter result:resultBlock];

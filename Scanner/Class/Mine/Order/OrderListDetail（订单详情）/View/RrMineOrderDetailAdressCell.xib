@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -35,8 +35,8 @@
                                             <constraint firstAttribute="width" constant="28" id="ey5-kj-EcS"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="广东省 广州市 天河区 华景软件园A栋8888号" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hem-7w-awR">
-                                        <rect key="frame" x="62" y="65" width="402" height="24"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="广东省 广州市 天河区 华景软件园A栋8888号" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hem-7w-awR">
+                                        <rect key="frame" x="62" y="65" width="663" height="24"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -66,13 +66,14 @@
                                     <constraint firstAttribute="trailing" secondItem="yNO-n8-poE" secondAttribute="trailing" id="LJR-8I-axB"/>
                                     <constraint firstItem="0Cx-6F-RAz" firstAttribute="leading" secondItem="Hem-7w-awR" secondAttribute="leading" id="m26-i6-yrB"/>
                                     <constraint firstItem="kEj-Ai-Tmf" firstAttribute="centerY" secondItem="AWB-wL-1hf" secondAttribute="centerY" constant="15" id="odN-Yz-X3I"/>
+                                    <constraint firstAttribute="trailing" secondItem="Hem-7w-awR" secondAttribute="trailing" constant="17" id="p0L-9R-xDv"/>
                                     <constraint firstItem="0Cx-6F-RAz" firstAttribute="top" secondItem="AWB-wL-1hf" secondAttribute="top" constant="22" id="sfe-LV-mPN"/>
                                     <constraint firstItem="Ptn-Vn-ckc" firstAttribute="leading" secondItem="0Cx-6F-RAz" secondAttribute="trailing" constant="17" id="vs8-2Q-Khd"/>
                                     <constraint firstItem="yNO-n8-poE" firstAttribute="leading" secondItem="AWB-wL-1hf" secondAttribute="leading" id="yrp-af-yyT"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JmF-5m-Ziq" userLabel="bottomView">
-                                <rect key="frame" x="0.0" y="124" width="742" height="91"/>
+                                <rect key="frame" x="0.0" y="124" width="742" height="90"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kXB-YD-o6d">
                                         <rect key="frame" x="383" y="0.0" width="154" height="44"/>
@@ -113,7 +114,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="svT-Iw-UWU" firstAttribute="leading" secondItem="kXB-YD-o6d" secondAttribute="trailing" constant="34" id="MG9-mJ-BAS"/>
                                     <constraint firstItem="kXB-YD-o6d" firstAttribute="centerY" secondItem="svT-Iw-UWU" secondAttribute="centerY" id="h5Q-JF-kus"/>
@@ -130,7 +131,7 @@
                             <constraint firstItem="JmF-5m-Ziq" firstAttribute="leading" secondItem="Ksc-IN-JFc" secondAttribute="leading" id="PSI-eg-54R"/>
                             <constraint firstAttribute="trailing" secondItem="AWB-wL-1hf" secondAttribute="trailing" id="Rve-0i-FAe"/>
                             <constraint firstItem="AWB-wL-1hf" firstAttribute="leading" secondItem="Ksc-IN-JFc" secondAttribute="leading" id="mUc-VY-IsF"/>
-                            <constraint firstAttribute="bottom" secondItem="JmF-5m-Ziq" secondAttribute="bottom" id="q7K-aM-SGK"/>
+                            <constraint firstAttribute="bottom" secondItem="JmF-5m-Ziq" secondAttribute="bottom" constant="1" id="q7K-aM-SGK"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="self.layer.masksToBounds" value="YES"/>

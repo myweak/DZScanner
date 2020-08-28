@@ -19,7 +19,7 @@
 #import "PostUserInfoVC.h"// 提交资料
 #import "CheckUserInfoVC.h" // 审核中
 #import "RrChangeWordVC.h" // 修改密码VC
-
+#import "RrCodeValidationVC.h"
 @interface RrCodeValidationVC ()<UITextFieldDelegate>
 {
     UITextField *passcodeTextField;
@@ -197,7 +197,6 @@
         digitImageViews[i].hidden = i >= [text length];
     }
     if ([text length] == 6) {
-        //        _continueBtn.enabled = YES;
         [passcodeTextField resignFirstResponder];
         if (self.type == RrCodeValidationVC_codeLogin) {
             [self postCodeLoginUrl];
@@ -216,6 +215,7 @@
     return YES;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
     if (self.type == RrCodeValidationVC_codeLogin) {
         [self postCodeLoginUrl];
     }else if(self.type == RrCodeValidationVC_forget){
@@ -251,7 +251,7 @@
             [[RrUserTypeModel sharedDataModel] updateUserTypeUrlWithBlock:^(BOOL success,RrUserTypeModel *model) {
                 [SVProgressHUD dismiss];
                 if (success) {
-                    [[LXObjectTools sharedManager] updateAddressUrlPlist];
+//                    [[LXObjectTools sharedManager] updateAddressUrlPlist];
                     [self choseStatus:model];
                 }
             }];
@@ -276,6 +276,18 @@
                 [UserDataManager registJPUSHServiceAlias];
                 if ([KWindow.rootViewController isKindOfClass:[MainTabBarVC class]]) {
                     self.hidenLeftTaBar = NO;
+                    
+                    NSMutableArray *navArr = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+                         for (UIViewController *VC in self.navigationController.viewControllers) {
+                             NSLog(@"-----%@",VC);
+                             if ([VC isKindOfClass:[LoginVC class]]){
+                                 [navArr removeObject:VC];
+                             }else if([VC isKindOfClass:[RrCodeValidationVC class]]){
+                                 [navArr removeObject:VC];
+                             }
+                         }
+                         self.navigationController.viewControllers = [navArr mutableCopy];
+                    
                     [self.navigationController popViewControllerAnimated:YES];
                 }else{
                     KWindow.rootViewController = [MainTabBarVC new];
@@ -316,8 +328,8 @@
         [SVProgressHUD dismiss];
         if (error) {
             [self.codeBtn reset];
-            showTopMessage(@"获取验证码失败");
-            return;
+//            showTopMessage(@"获取验证码失败");
+//            return;
         }
         showTopMessage(responseModel.msg);
     }, nil)];
@@ -332,6 +344,7 @@
             RrChangeWordVC *changVc =[RrChangeWordVC new];
             changVc.phoneNum = self.phoneNum;
             changVc.phoneCode = self.passcode;
+            changVc.title = self.title;
             [self.navigationController pushViewController:changVc animated:YES];
         }else{
             [self->passcodeTextField becomeFirstResponder];

@@ -21,7 +21,7 @@
 //    if (!_msg) {
 //        return self.error.msg;
 //    }
-    if (![_msg hasChinese]) {
+    if (_msg != nil && ![_msg hasChinese]) {
         return @"服务异常 -_-!";;
     }
     return _msg;

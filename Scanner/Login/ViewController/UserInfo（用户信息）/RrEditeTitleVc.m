@@ -97,7 +97,7 @@
 - (void)getAssociatedUrl{
     @weakify(self)
     if (checkStrEmty(self.textField.text)) {
-        showTopMessage([NSString stringWithFormat:@"%@%@",@"请填写",self.mainTitle]);
+        showTopMessage([NSString stringWithFormat:@"%@",self.placeholderStr]);
         return;
     }
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];

@@ -12,7 +12,9 @@
 #import "RrLonginModel.h"
 #import <SDImageCache.h>
 #import  <EGOCache/EGOCache.h>
-
+#import "JPUSHService.h"
+#import <UserNotifications/UserNotifications.h>
+#import "AppModel.h"
 @interface LXObjectTools ()<OTAvatarImagePickerDelegate>
 @end
 @implementation LXObjectTools
@@ -63,27 +65,27 @@
     [cache clearMemory];
     [cache clearDiskOnCompletion:^{
     }];
-
-
+    
+    
 }
 
 
 // 更新地址url 省市区
 - (void)updateAddressUrlPlist{
     
-//    [RWPromise promise:^(ResolveHandler resolve, RejectHandler reject) {
-//        resolve(@"1");
-//    }].then(^id(id value){
-//        NSLog(value);
-//        return @"2";
-//    }).catch(^(NSError* e){
-//        NSLog(@"error");
-//    }).then(^id(id value){
-//        NSLog(value);
-//        return nil;
-//    });
-
-
+    //    [RWPromise promise:^(ResolveHandler resolve, RejectHandler reject) {
+    //        resolve(@"1");
+    //    }].then(^id(id value){
+    //        NSLog(value);
+    //        return @"2";
+    //    }).catch(^(NSError* e){
+    //        NSLog(@"error");
+    //    }).then(^id(id value){
+    //        NSLog(value);
+    //        return nil;
+    //    });
+    
+    
     [[RRNetWorkingManager sharedSessionManager] getProvinceListAdderss:nil result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         if (!error) {
             NSArray *arr = responseModel.data;
@@ -99,13 +101,54 @@
 - (void)getAppVersionUrl{
     NSString *device =[[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? @"IOS" :@"IPAD";
     [[RRNetWorkingManager sharedSessionManager] getAppVersion:@{KKey_1:device} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
-        if (error) {
-//            [[UIViewController visibleViewController] AlertWithTitle:@"温馨提示" message:<#(NSString *)#> andOthers:<#(NSArray<NSString *> *)#> animated:<#(BOOL)#> action:<#^(NSInteger index)click#>];
+        if (!error) {
+            AppModel *model = (AppModel*)responseModel.item;
+            NSArray *btnArr = @[@"不更新",@"马上更新"];
+            NSString *versionStr = [[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] appVersionNumberFormat];
+            NSString *app_Version = [versionStr appVersionNumberFormat];
+            NSString * version = [model.version appVersionNumberFormat];
+            if (![version containsOnlyNumbers]) {
+                return;
+            }
+            if ([version floatValue] <= [app_Version floatValue]) {
+                return;
+            }
+            if ([model.forceType intValue] == 1) { //强制升级
+                btnArr = @[@"马上更新"];
+            }else{
+                NSString *versionKey = [NSString stringWithFormat:@"版本%@",model.version];
+                if ([RrUserDefaults getBoolValueInUDWithKey:versionKey]) {
+                    return;
+                }
+                [RrUserDefaults saveBoolValueInUD:YES forKey:versionKey];
+            }
+            [[UIViewController visibleViewController] AlertWithTitle:[NSString stringWithFormat:@"\"%@\"新版本通知",model.appName] message:model.context andOthers:btnArr animated:YES action:^(NSInteger index) {
+                if ([btnArr[index] isEqualToString:@"马上更新"]) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:model.url] options:nil completionHandler:^(BOOL success) {
+                        exit(0);
+                    }];
+                }
+            }];
         }
-    }, nil)];
+    }, [AppModel class])];
 }
 
-
++ (void)initUMConfig{
+#ifdef DEBUG
+    // 打开友盟sdk调试，注意Release发布时需要注释掉此行,减少io消耗
+    [MobClick setLogEnabled:YES];
+    //开发者需要显式的调用此函数，日志系统才能工作
+#else
+#endif
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    
+    UMConfigInstance.appKey = KUM_AppKey;
+    [MobClick startWithConfigure:UMConfigInstance];
+    [MobClick setAppVersion:version];
+    [MobClick setCrashReportEnabled:YES];//打开奔溃报告
+    
+    
+}
 
 
 //--------头像选择相片-------------star-----------------------------------------------------------------

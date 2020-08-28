@@ -26,6 +26,11 @@ typedef void (^AddPhotoViewSelectedBlock)(NSInteger  index);
 @property (nonatomic, strong) NSArray *imageUrl; //URL 图片地址
 @property (nonatomic, assign) CGFloat photoW;
 @property (nonatomic, assign) BOOL isCanEdite; // 默认是可以添加图片的
+/**
+ 最大照片选择数 默认是 9 张
+ */
+@property (nonatomic, assign) NSInteger maxPhotoNum;
+
 @property (nonatomic, copy)   ComplemntBlock complemntBlock;
 @property (nonatomic, copy)   ComplemntBlock onTapAddBtnBlock;
 @property (nonatomic, copy)   ComplemntBlock deleteSourceBlock;
@@ -35,7 +40,8 @@ typedef void (^AddPhotoViewSelectedBlock)(NSInteger  index);
 
 //更新UI
 - (void)updateAddPhotoView;
-
+// 初始化 imageUrl 数据
+- (void)oneUpdateAddPhotoViewWithImageUrl:(NSArray *)imageUrl;
 @end
 
 

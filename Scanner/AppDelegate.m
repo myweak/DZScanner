@@ -12,8 +12,7 @@
 #import "MainTabBarVC.h"
 #import "JPUSHService.h"
 #import <UserNotifications/UserNotifications.h>
-
-#import <LLDebug.h>
+//#import <LLDebug.h>
 
 #import "RrLonginModel.h"
 #import "RrAgreementView.h"
@@ -48,12 +47,14 @@
 {
     
 #ifdef DEBUG
-    [[LLDebugTool sharedTool] startWorkingWithConfigBlock:^(LLConfig * _Nonnull config) {
-    }];
+//    [[LLDebugTool sharedTool] startWorkingWithConfigBlock:^(LLConfig * _Nonnull config) {}];
 #else
 #endif
+    if (@available(iOS 11, *)) {
+            UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+
     
-    NSLog(@"👴服务器地址  %@",RrDBaseUrl);
     
     [IQKeyboardManager sharedManager].enable = YES;
     [IQKeyboardManager sharedManager].enableAutoToolbar = YES;
@@ -85,32 +86,12 @@
     //极光推送
     [self jPushInit];
     
-    
     /**
      *  友盟统计配置
      */
-    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    
-    UMConfigInstance.appKey = KUM_AppKey;
-    [MobClick startWithConfigure:UMConfigInstance];
-    [MobClick setAppVersion:version];
-//    [UMConfigure initWithAppkey:KUM_AppKey channel:nil];
-//    
-//    //开发者需要显式的调用此函数，日志系统才能工作
-////    [UMCommonLogManager setUpUMCommonLogManager];
-//    [UMConfigure setEncryptEnabled:YES];//打开加密传输
-//    [UMConfigure setLogEnabled:YES];//日志输出
-//    [MobClick setCrashReportEnabled:YES];//打开奔溃报告
-////    [MobClick setScenarioType:0|1|4];//所有类型统计都适用
-//    [MobClick setAutoPageEnabled:YES];//页面自动统计
+    [LXObjectTools initUMConfig];
 
 
-    #ifdef DEBUG
-    // 打开友盟sdk调试，注意Release发布时需要注释掉此行,减少io消耗
-        [MobClick setLogEnabled:YES];
-    //开发者需要显式的调用此函数，日志系统才能工作
-    #else
-    #endif
     
     
     [LXObjectTools getAppVersionUrl];
@@ -123,7 +104,7 @@
     
 }
 
-// 极光初始化
+//// 极光初始化
 - (void)jPushInit
 {
     JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
@@ -195,17 +176,17 @@
     
 }
 
-
+//自动获取数据 更新
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     // Required, iOS 7 Support
-    [self ReceiveNotificationResponsePushToVCWithDict:userInfo];
+//    [self ReceiveNotificationResponsePushToVCWithDict:userInfo];
     [JPUSHService handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     // Required, For systems with less than or equal to iOS 6
-    [self ReceiveNotificationResponsePushToVCWithDict:userInfo];
+//    [self ReceiveNotificationResponsePushToVCWithDict:userInfo];
     [JPUSHService handleRemoteNotification:userInfo];
 }
 
@@ -247,20 +228,21 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     if ([RrUserTypeModel isLogin]) {
        typeJsonMdoel *model =  [typeJsonMdoel mj_objectWithKeyValues:[userInfo valueForKey:@"msgJson"]];
         [typeJsonMdoel patchMessageUrlWithID:model.ID];//标为已读
-        
+        UIViewController *vc =[UIViewController visibleViewController];
+      
         if ([model.type isEqualToString:@"AUDIT_SUCCESS"] ||
             [model.type isEqualToString:@"AUDIT_FAIL"]) {// 关联代理商审核成功, //AUDIT_FAIL关联代理商审核失败
             CheckUserInfoVC *userVc =[CheckUserInfoVC new];
             userVc.title = @"个人资料";;
-            UIViewController *vc =[UIViewController visibleViewController];
+            userVc.type = CheckUserInfoVCType_push;
             [vc.navigationController pushViewController:userVc animated:YES];
             
         }else if([model.type isEqualToString:@"ORDERS_DELIVERY"] ||
                  [model.type isEqualToString:@"ORDERS_REJECTED"] ||
                  [model.type isEqualToString:@"ORDERS_THROUGH"]) {//订单发货 //ORDERS_REJECTED订单审核驳回 //ORDERS_THROUGH订单审核通过
+            KPostNotification(KNotification_name_updateOrder_list, nil);
             RrMineOrderListDetailVC *detailVc =[RrMineOrderListDetailVC new];
             detailVc.outTradeNo = model.prod;
-            UIViewController *vc =[UIViewController visibleViewController];
             [vc.navigationController pushViewController:detailVc animated:YES];
         }
         

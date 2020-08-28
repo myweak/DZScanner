@@ -24,7 +24,15 @@
     @weakify(self)
     self.title = @"收货地址";
     [self.view addSubview:self.tableView];
-    [self getAdressListUrl];
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        @strongify(self);
+        
+        [self getAdressListUrl];
+    }];
+    
+    [self.tableView.mj_header beginRefreshing];
+
     
     [self addNavigationButtonRight:@"添加新地址" RightActionBlock:^{
         @strongify(self);
@@ -150,7 +158,7 @@
 
 #pragma mark - 网络 URL
 - (void)getAdressListUrl{
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeNone];
+    //    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeNone];
     [[RRNetWorkingManager sharedSessionManager] getAddressList:@{KisAddEGOCache_Key:KisAddEGOCache_value} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         [SVProgressHUD dismiss];
         if (!error) {
@@ -158,6 +166,10 @@
             [self.tableView reloadData];
         }else{
             showTopMessage(responseModel.msg);
+        }
+        if (!responseModel.isCashEQO) {
+            [self.tableView.mj_header endRefreshing];
+            [SVProgressHUD dismiss];
         }
     }, [RrMineAddressMdoel class])];
 }

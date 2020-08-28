@@ -205,7 +205,7 @@
             messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
             messageLabel.font = [UIFont systemFontOfSize:18.0 weight:UIFontWeightRegular];
             messageLabel.adjustsFontSizeToFitWidth = YES;
-            NSString *subText = @"在开始扫码前，你需要先校准你的Structure Sensor.";
+            NSString *subText = @"在开始扫码前，你需要先校准你的结构传感器.";
             NSMutableAttributedString* attrSub = [[NSMutableAttributedString  alloc] initWithString:subText];
             NSMutableParagraphStyle *subStyle = [[NSMutableParagraphStyle alloc] init];
             [subStyle setLineSpacing:8.0];
@@ -342,7 +342,7 @@
             UILabel * message = [[UILabel alloc] init];
             message.translatesAutoresizingMaskIntoConstraints = NO;
             message.font = [UIFont fontWithName:@"DIN Alternate Bold" size:16.0];
-            message.text = @"Calibration needed for best results.";
+            message.text = @"需要校准以获得最佳结果.";
             message.textColor = [UIColor whiteColor];
             [_contentView addSubview:message];
 
@@ -382,7 +382,7 @@
             UIButton * calibrationButton = [UIButton buttonWithType: UIButtonTypeSystem];
             calibrationButton.translatesAutoresizingMaskIntoConstraints = NO;
             
-            [calibrationButton setTitle: @"Calibrate Now" forState: UIControlStateNormal];
+            [calibrationButton setTitle: @"现在校准" forState: UIControlStateNormal];
             calibrationButton.tintColor = [UIColor colorWithRed:0.25 green:0.73 blue: 0.88 alpha: 1.];
             calibrationButton.titleLabel.font =  [UIFont fontWithName:@"DIN Alternate Bold" size:16.0];
             calibrationButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -539,7 +539,7 @@
             titleLabel.font = [UIFont systemFontOfSize:36.0 weight:UIFontWeightBold];
             
             titleLabel.adjustsFontSizeToFitWidth = YES;
-            titleLabel.text = @"Lens Calibration Required";
+            titleLabel.text = @"镜头的校准要求";
             titleLabel.textColor = [UIColor whiteColor];
             [_contentView addSubview:titleLabel];
             
@@ -581,7 +581,7 @@
             messageLabel.font = [UIFont systemFontOfSize:18.0 weight:UIFontWeightRegular];
             messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
             messageLabel.numberOfLines = 0;
-            NSString *subText = @"In order to scan with your Wide Vision Lens, you need to calibrate the lens.";
+            NSString *subText = @"为了用你的广视镜进行扫描，你需要校准镜头.";
             NSMutableAttributedString* attrSub = [[NSMutableAttributedString  alloc] initWithString:subText];
             NSMutableParagraphStyle *subStyle = [[NSMutableParagraphStyle alloc] init];
             [subStyle setLineSpacing:8.0];
@@ -623,7 +623,7 @@
             subMessageLabel.lineBreakMode = NSLineBreakByWordWrapping;
             subMessageLabel.numberOfLines = 0;
 
-            NSString *text = @"(Alternatively, you may toggle off and remove your Wide Vision Lens.)";
+            NSString *text = @"(或者，您可以关闭并摘除广角镜头.)";
             NSMutableAttributedString* attrString = [[NSMutableAttributedString  alloc] initWithString:text];
             NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
             [style setLineSpacing:8.0];
@@ -661,7 +661,7 @@
             
             UIButton * calibrateButton = [UIButton buttonWithType:UIButtonTypeCustom];
             calibrateButton.translatesAutoresizingMaskIntoConstraints = NO;
-            [calibrateButton setTitle: @"Calibrate Now" forState: UIControlStateNormal];
+            [calibrateButton setTitle: @"现在校准" forState: UIControlStateNormal];
             [calibrateButton setTitleColor:colorFromHexString(@"#3A3A3C") forState:UIControlStateNormal];
             [calibrateButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.76] forState:UIControlStateHighlighted];
             

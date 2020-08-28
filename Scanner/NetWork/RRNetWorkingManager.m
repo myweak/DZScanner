@@ -101,13 +101,14 @@ NSString* deviceName()
     self.baseUrlString = RrDBaseUrl;
 #endif
     
-    
+    NSLog(@"👴当前服务器地址  %@",RrDBaseUrl);
+
     
     if (![self.baseUrlString isEqualToString:self.sessionManager.baseURL.absoluteString]) {
         
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
         configuration.timeoutIntervalForRequest = 30;
-        configuration.timeoutIntervalForResource = 30;
+//        configuration.timeoutIntervalForResource = 30;
         self.sessionManager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:self.baseUrlString] sessionConfiguration:configuration];
         self.sessionManager.requestSerializer = [AFJSONRequestSerializer serializer];
         self.sessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -123,7 +124,7 @@ NSString* deviceName()
         securityPolicy.validatesDomainName = NO;
         self.sessionManager.securityPolicy = securityPolicy;
         
-        [self setToken:[RrLonginModel readUserData].access_token];
+        [self setToken:[RrLonginModel readUserData].loginModel.access_token];
         
     }
     
@@ -150,7 +151,8 @@ static NSString *AntDeviceKey = @"Ant-Device";
     NSString *Software = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     NSString *uuid = [AHChain shareManager].chainData[DeviceUUIDKey];
     NSString *antDivice = [NSString stringWithFormat:
-                           @"vendor:%@|model:%@|system:%@|deviceId:%@|token:%@|software:%@",@"Apple",
+                           @"vendor:%@|model:%@|system:%@|deviceId:%@|token:%@|software:%@",
+                           @"Apple",
                            deviceName(),
                            [UIDevice currentDevice].systemVersion,
                            uuid,
@@ -290,7 +292,7 @@ static NSString *AntDeviceKey = @"Ant-Device";
     
     NSString *url = urlString;
     NSMutableDictionary *header = [NSMutableDictionary dictionary];
-    [header setValue:[self AntDevice] forKey:AntDeviceKey];
+    [header setValue:[[RRNetWorkingManager sharedSessionManager] AntDevice] forKey:AntDeviceKey];
     
     if ([method isEqualToString: @"GET"]) {
         
@@ -497,11 +499,26 @@ static NSString *AntDeviceKey = @"Ant-Device";
                 dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&jsonModelError];
             }
             responseModel = [RrResponseModel mj_objectWithKeyValues:dict];
-            NSLog(@"👴请求头：HTTPRequestHeaders👴%@",self.sessionManager.requestSerializer.HTTPRequestHeaders);
+            responseModel.isCashEQO = NO;
+
             NSLog(@"😄😄%@",dict);
             if ([responseModel.code integerValue] == 401) { // token 过期 -->重新登陆
                 [[UserDataManager sharedManager] psuhLoginVC];
                 //                showMessage(@"登陆过期");
+            }
+            
+            if ([[errorB valueForKey:@"_code"] intValue] == -1001) {//请求超时
+                if (responseModel == nil) {
+                    responseModel = [RrResponseModel new];
+                }
+                responseModel.msg = @"请求超时，请调整网络稍后再试";
+                responseModel.code = [errorB valueForKey:@"_code"];
+            }else if ([[errorB valueForKey:@"_code"] intValue] == -1009) {//无网络
+                if (responseModel == nil) {
+                    responseModel = [RrResponseModel new];
+                }
+                responseModel.msg = @"已断开与互联网的连接，请检查网络";
+                responseModel.code = [errorB valueForKey:@"_code"];
             }
             if (responseModel) {
                 NSMutableDictionary *userInfoNew = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -517,7 +534,7 @@ static NSString *AntDeviceKey = @"Ant-Device";
         @catch(NSException *e) { }
         
         if (result.resultBlock) {
-            result.resultBlock(dict, nil, errorB);
+            result.resultBlock(dict, responseModel, errorB);
         }
         
         if (weakSelf.responseBlock) {

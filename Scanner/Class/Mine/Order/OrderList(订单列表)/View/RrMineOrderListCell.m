@@ -44,6 +44,8 @@
         return;
     }
     self.bottomView.hidden = NO;
+    self.leftBtn.hidden = NO;
+    self.rightBtn.hidden = NO;
     NSString *leftStr = @"取消订单";
     NSString *rightStr = @"";
     switch ([self.model.orderStatus intValue]) {
@@ -61,6 +63,8 @@
             if ([self.model.payType intValue] == 2) {//支付方式:1在线支付，2线下支付
                 self.rightBtn.hidden = YES;
                 self.leftBtn_xr.constant = -154;
+            }else{
+                self.leftBtn_xr.constant = 34;
             }
             rightStr = @"付款提醒";
             break;

@@ -26,6 +26,10 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 
 
 @interface LoginVC ()<UITextFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
+@property (weak, nonatomic) IBOutlet UILabel *accountNumLabel; //账号、手机号
+
 @property (weak, nonatomic) IBOutlet UIImageView *topImageView;
 @property (weak, nonatomic) IBOutlet UIView *phoneView;
 
@@ -66,7 +70,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-//    [MobClick beginLogPageView:@"登陆"];
+    //    [MobClick beginLogPageView:@"登陆"];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
@@ -75,14 +79,14 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
     //清除token 及用户数据，
     [[UserDataManager sharedManager] deleteAllUserInfo];
     self.navigationController.navigationBar.hidden = YES;
-     self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
+    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = YES;
     [super viewWillDisappear:animated];
-//    [MobClick endLogPageView:@"登陆"];
-
+    //    [MobClick endLogPageView:@"登陆"];
+    
 }
 
 
@@ -103,6 +107,32 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
     // 键盘消失的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHiden:) name:UIKeyboardWillHideNotification object:nil];
     
+#ifdef DEBUG
+    [self addTextBug];
+#else
+#endif
+    
+}
+#pragma mark - 测试 DEBUG
+- (void)addTextBug{
+#ifdef DEBUG
+    showMessage(@"🌞有测试--》DEBUG🌛");
+    [self.iconImageView handleTap:^(CGPoint loc, UIGestureRecognizer *tapGesture) {
+#ifdef DEBUG
+        NSArray *arr = [LXObjectTools getRrDBaseUrlArr];
+        [self ActionSheetWithTitle:@"更换域名" message:@"debug状态" destructive:@"取消" destructiveAction:^(NSInteger index) {
+            
+        } andOthers:arr animated:YES action:^(NSInteger index) {
+            if (index != 0) {
+                [RrUserDefaults saveStrValueInUD:arr[index] forKey:SRrDBaseUrl];
+                exit(0);
+            }
+        }];
+#else
+#endif
+    }];
+#else
+#endif
 }
 
 
@@ -125,7 +155,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
     
     self.passTextField.secureTextEntry = YES;
     self.passTextField.keyboardType =  UIKeyboardTypeNumberPad;
-
+    
     // 登陆
     self.longinBtn.layer.cornerRadius = 44/2.0f;
     [self.longinBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -242,7 +272,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
     BOOL b = !self.enSourceBtn.selected;
     self.enSourceBtn.selected = b;
     self.passTextField.secureTextEntry = !b;
-        
+    
 }
 #pragma mark -登陆
 - (IBAction)loginBtnAction:(id)sender {
@@ -254,8 +284,8 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
         showMessage(@"请输入密码");
         return;
     }
-    if (![self.phoneTextFild.text isMobileNumber]) {
-        showMessage(@"手机号码格式错误");
+    if ([self.phoneTextFild.text length] <6) {
+        showMessage(@"账号至少6位");
         return;
     }else if(self.passTextField.text.length <6){
         showMessage(@"密码至少为六位字符");
@@ -266,6 +296,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 }
 //手机验证码登录
 - (IBAction)codeLoginBtnAction:(id)sender {
+    self.accountNumLabel.text = @"手机号:";
     self.codeView.hidden = NO;
     self.accountView.hidden = YES;
     self.forgotPassWordLabel.hidden = YES;
@@ -275,8 +306,8 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 
 // 账号登陆
 - (IBAction)accountBtnAction:(id)sender {
-//    KWindow.rootViewController = self.tabarVc;
-    
+    //    KWindow.rootViewController = self.tabarVc;
+    self.accountNumLabel.text = @"账号:";
     self.codeView.hidden = YES;
     self.accountView.hidden = NO;
     self.forgotPassWordLabel.hidden = NO;
@@ -305,7 +336,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 
 //登陆接口
 - (void)postPhoneLoginUrl{
-
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     NSDictionary *dict = @{@"username":self.phoneTextFild.text,@"password":[self.passTextField.text base64String]};
     [[RRNetWorkingManager sharedSessionManager] login:dict result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
@@ -317,7 +348,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
             [model saveUserData];
             [[RrUserTypeModel sharedDataModel] updateUserTypeUrlWithBlock:^(BOOL success,RrUserTypeModel *typeModel) {
                 if (success) {
-                    [[LXObjectTools sharedManager] updateAddressUrlPlist];
+                    //                    [[LXObjectTools sharedManager] updateAddressUrlPlist];
                     [self choseStatus:typeModel];
                 }else{
                     [SVProgressHUD dismiss];
@@ -342,6 +373,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
             [SVProgressHUD dismiss];
             if (success) {
                 [UserDataManager registJPUSHServiceAlias];
+                [[LXObjectTools sharedManager] updateAddressUrlPlist];
                 if ([KWindow.rootViewController isKindOfClass:[MainTabBarVC class]]) {
                     self.hidenLeftTaBar = NO;
                     [self.navigationController popViewControllerAnimated:YES];
@@ -369,8 +401,8 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
         CheckUserInfoVC *checkVc = [CheckUserInfoVC new];
         checkVc.title = @"我的信息";
         checkVc.type = userStatus == firstInfoing  ?  CheckUserInfoVCType_check:CheckUserInfoVCType_unCheck;
-//        checkVc.type =  CheckUserInfoVCType_unCheck;
-
+        //        checkVc.type =  CheckUserInfoVCType_unCheck;
+        
         [self.navigationController pushViewController:checkVc animated:YES];
         
     }

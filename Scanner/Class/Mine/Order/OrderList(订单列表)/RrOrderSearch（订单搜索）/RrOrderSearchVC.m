@@ -121,12 +121,14 @@
     if (checkStrEmty(model.outTradeNo)) {
         return;
     }
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     [[RRNetWorkingManager sharedSessionManager] putOrderPayNotifi:@{@"outTradeNo":model.outTradeNo} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         if (!error) {
             showMessage(@"已发送付款提醒");
         }else{
             showMessage(responseModel.msg);
         }
+        [SVProgressHUD dismiss];
     }, nil)];
     
 }

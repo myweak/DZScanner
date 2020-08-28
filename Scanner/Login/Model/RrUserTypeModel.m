@@ -10,6 +10,8 @@
 
 @implementation RrUserTypeModel
 
+static dispatch_once_t onceToken;
+
 
 - (void)setStatus:(NSNumber *)status{
     _status = status;
@@ -19,7 +21,6 @@
 +(instancetype)sharedDataModel
 {
     static RrUserTypeModel *singleton = nil;
-    static dispatch_once_t onceToken;
     // dispatch_once  无论使用多线程还是单线程，都只执行一次
     dispatch_once(&onceToken, ^{
         singleton = [[RrUserTypeModel alloc] init];
@@ -57,6 +58,8 @@ Rr_CodingImplementation
     _userModel = nil;
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:KUserTypeTitle];
+    self.status = nil;
+    [self clear];
     [defaults synchronize];
 }
 - (RrUserTypeModel *)userModel{
@@ -64,6 +67,9 @@ Rr_CodingImplementation
         _userModel = [RrUserTypeModel  readUserData];
     }
     return _userModel;
+}
+- (void)clear {
+    onceToken   = 0;
 }
 
 

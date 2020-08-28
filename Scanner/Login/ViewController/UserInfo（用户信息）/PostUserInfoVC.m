@@ -68,6 +68,19 @@
         KCell_Space,
     ];
     self.tableView.tableHeaderView = self.headView;
+    
+    
+    NSMutableArray *navArr = [NSMutableArray array];
+    for (UIViewController *VC in self.navigationController.viewControllers) {
+        NSLog(@"-----%@",VC);
+        if ([VC isKindOfClass:[LoginVC class]]){
+            [navArr addObject:VC];
+        }else if([VC isKindOfClass:[PostUserInfoVC class]]){
+            [navArr addObject:VC];
+        }
+    }
+    self.navigationController.viewControllers = navArr;
+    
 
 }
 
@@ -221,7 +234,8 @@
     [parameter setValue:self.professionalTextField.text forKey:@"title"]; //职称
  //关联经销商编码
     if (!checkStrEmty(self.mAccountTextField.text)) {
-         [parameter setObject:@"companyCode" forKey:self.mAccountTextField.text];
+        [parameter setObject:self.mAccountTextField.text forKey:@"companyCode"];
+
      }
     [parameter setValue:certimg forKey:@"certimg"]; //从业资格图片URL ';'多图逗号隔开
 

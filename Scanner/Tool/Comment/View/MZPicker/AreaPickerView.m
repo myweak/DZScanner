@@ -43,7 +43,7 @@
 {
     
     NSString *filePath = [[self class] getAreaFilePathWithFileName:KFileNameAllAddress];
-
+    
     BOOL status = [array writeToFile:filePath atomically:YES];
     
     if (status == YES) {
@@ -55,7 +55,7 @@
 
 + (NSString *)getAreaFilePathWithFileName:(NSString *)fileName
 {
-
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -104,7 +104,7 @@
 }
 -(UIPickerView *)pickerView{
     if (!_pickerView) {
-        _pickerView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, KScreenHeight, KFrameWidth, KScreenHeight*2/5 -64)];
+        _pickerView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, KScreenHeight-64, KFrameWidth, KCell_H *3)];
         _pickerView.backgroundColor = [UIColor whiteColor];
     }
     return _pickerView;
@@ -138,7 +138,7 @@
 // 数据排序
 - (void)initDatas
 {
-
+    
     @weakify(self)
     NSString *areaPath = [AreaPickerView getAreaFilePathWithFileName:KFileNameAllAddress];
     NSArray * dataArrray =  [RrAddressModel mj_objectArrayWithFile:areaPath];
@@ -194,24 +194,32 @@
 }
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
 {
-    UILabel * titlLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 110, 25)];
+    UILabel * titlLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, (KFrameWidth - 60) / 3, 25)];
     titlLabel.backgroundColor = [UIColor clearColor];
     titlLabel.font = KFont20;
     titlLabel.textAlignment = NSTextAlignmentCenter;
     if (component == 0) {
-        RrAddressModel *model = [self.provinceArray objectAtIndex:row];
-        titlLabel.text = model.areaName;
-        return titlLabel;
-    } else if (component == 1) {
-        RrAddressModel *model = [self.cityArray objectAtIndex:row];
-        titlLabel.text = model.areaName;
-        return titlLabel;
-    } else {
-        RrAddressModel *model = [self.townArray objectAtIndex:row];
-        titlLabel.text = model.areaName;
+        if (row < self.provinceArray.count) {
+            RrAddressModel *model = [self.provinceArray objectAtIndex:row];
+            titlLabel.text = model.areaName;
+        }
         
-        return titlLabel;
+    } else if (component == 1) {
+        if (row < self.cityArray.count) {
+            RrAddressModel *model = [self.cityArray objectAtIndex:row];
+            titlLabel.text = model.areaName;
+        }
+        
+    } else {
+        if (row < self.townArray.count) {
+            RrAddressModel *model = [self.townArray objectAtIndex:row];
+            titlLabel.text = model.areaName;
+        }
+        
+        
     }
+    return titlLabel;
+    
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
@@ -231,6 +239,9 @@
     
     
     if (component == PROVINCE_COMPONENT) {
+        if (row >= self.provinceArray.count) {
+            return;
+        }
         _selectedProvinceModel = [self.provinceArray objectAtIndex: row];
         //选中的市
         self.cityArray =  _selectedProvinceModel.item;
@@ -248,9 +259,13 @@
         });
     }
     else if (component == CITY_COMPONENT) {
+        if (row >= self.cityArray.count) {
+            return;
+        }
         _selectedCityModel = [self.cityArray objectAtIndex: row];
         //选中的区
         self.townArray =  _selectedCityModel.item;
+        
         _selectedAraeModel = [self.townArray firstObject];
         
         [self.pickerView reloadComponent: DISTRICT_COMPONENT];
@@ -262,6 +277,9 @@
         //    provinceStr = [provinceStr stringByReplacingOccurrencesOfString:@"　" withString:@""];
         
     }else{
+        if (row >= self.townArray.count) {
+            return;
+        }
         _selectedAraeModel = [self.townArray objectAtIndex: row];
     }
 }
@@ -306,7 +324,7 @@
     
     [[UIViewController visibleViewController].view addSubview:self];
     [UIView animateWithDuration:0.5 animations:^{
-        self.pickerView.bottom = self.bottom;
+        self.pickerView.bottom = self.bottom-64;
         self.bgView.bottom = self.pickerView.top;
     }];
 }

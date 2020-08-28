@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) PHImageRequestOptions *requestOptions;
 @property (nonatomic, strong) MZQiNiuManager *qiNiuManager;
+@property (nonatomic, strong) CTAssetsPickerController *picker;
 @end
 
 @implementation MZAssetsManager
@@ -69,26 +70,33 @@
     WEAKSELF;
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             // init picker
-            CTAssetsPickerController *picker = [[CTAssetsPickerController alloc] init];
+            if(!self.picker){
+                self.picker = [[CTAssetsPickerController alloc] init];
+            }
+            
             
             // set delegate
-            picker.delegate = weakSelf;
-            picker.selectedAssets = [weakSelf.currentAssets mutableCopy];
+            self.picker.delegate = weakSelf;
+            self.picker.selectedAssets = [weakSelf.currentAssets mutableCopy];
             
             if (self.imageOnly)
-                [self setImageOnlyForPicker:picker];
+                [self setImageOnlyForPicker:self.picker];
             else if (self.videoOnly)
-                [self setVideoOnlyForPicker:picker];
+                [self setVideoOnlyForPicker:self.picker];
             
             // to present picker as a form sheet in iPad
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-                picker.modalPresentationStyle = UIModalPresentationFormSheet;
+                self.picker.modalPresentationStyle = UIModalPresentationFormSheet;
+            
+            if (@available(iOS 11, *)) {
+                           UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
+
+            }
             
             // present picker
             UIViewController *m_controller = [UIViewController visibleViewController];
-            [m_controller presentViewController:picker animated:YES completion:nil];
+            [m_controller presentViewController:self.picker animated:YES completion:nil];
             
         });
     }];
@@ -190,6 +198,13 @@
 
 - (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets
 {
+    if (@available(iOS 11, *)) {
+
+             UIScrollView.appearance.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+
+     }
+
+
     [picker.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     self.currentAssets = [NSMutableArray array];
     [self.currentAssets addObjectsFromArray:assets];

@@ -25,7 +25,8 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    self.tableView.bottom = KScreenHeight-64;
+    self.tableView.bottom = self.view.bottom;
+    self.recordView.bottom = self.view.bottom;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -38,7 +39,11 @@
     [super viewDidLoad];
     self.title = @"搜索";
     [self commitSearchController];
-    
+   
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    if (@available(iOS 11.0, *)){
+            [[UIScrollView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+        }
     @weakify(self)
     [self addNavigationButtonImageRight:@"navi_search_icon" RightActionBlock:^{
         @strongify(self)
@@ -85,7 +90,7 @@
         titleLabel.font = KFont20;
         titleLabel.text = @"最近搜索";
         [_recordView addSubview:titleLabel];
-    }
+     }
     return _recordView;
 }
 - (void)updateHistoryRecordView{
@@ -213,7 +218,8 @@
 - (void)commitSearchController {
     
     self.definesPresentationContext = YES;
-    
+    self.extendedLayoutIncludesOpaqueBars  = YES;
+
     //创建UISearchController
     self.searchController = [[UISearchController alloc]initWithSearchResultsController:nil];
     self.searchController.delegate = self;

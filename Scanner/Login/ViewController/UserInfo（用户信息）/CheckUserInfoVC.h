@@ -11,6 +11,7 @@ typedef NS_ENUM(NSInteger,CheckUserInfoVCType) {
     CheckUserInfoVCType_check = 0, //审核中
     CheckUserInfoVCType_unCheck , // 审核驳回
     CheckUserInfoVCType_mine,  // 我的界面进入。显示个人资料
+    CheckUserInfoVCType_push, //推送
 };
 
 #import "MainViewController.h"

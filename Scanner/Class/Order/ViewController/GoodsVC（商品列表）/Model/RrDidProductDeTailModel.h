@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString *doctorAddr;//收货地址
 @property (nonatomic, copy)   NSString *payTime; //支付时间
 @property (nonatomic, copy)   NSString *productAbstract;//适应病症
-
+@property (nonatomic, copy)   NSString *completeTime; //收货时间
 // ----
 @property (nonatomic, copy)   NSString *orderStatus_Str;//订单状态 str
 @property (nonatomic, strong) NSNumber *payTypeStr;

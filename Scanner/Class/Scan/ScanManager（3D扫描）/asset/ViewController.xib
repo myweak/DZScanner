@@ -9,10 +9,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
-                <outlet property="appStatusMessageLabel" destination="6ly-If-uZh" id="N1A-tf-yUE"/>
+                <outlet property="appStatusMessageLabel" destination="6ly-If-uZh" id="a1h-JT-jnz"/>
                 <outlet property="backButton" destination="5Xc-Zv-uR2" id="TWC-CH-APt"/>
                 <outlet property="battertLabel" destination="yuP-Zb-bua" id="SZK-kA-FON"/>
+                <outlet property="buyView" destination="ZO4-Cr-gAY" id="F2U-4i-EZL"/>
+                <outlet property="buyView_top" destination="SSb-VV-8eG" id="xtc-ZV-v6Z"/>
                 <outlet property="doneButton" destination="mZb-la-8Ct" id="e73-HP-m5Y"/>
+                <outlet property="firmwareUpdateView" destination="roX-oJ-mYx" id="YEv-Rd-xul"/>
                 <outlet property="resetButton" destination="ten-ab-OVy" id="dXj-nh-sEg"/>
                 <outlet property="scanButton" destination="J7F-Wp-rfI" id="aLf-vV-7Hc"/>
                 <outlet property="trackingLostLabel" destination="8b4-Zl-yJD" id="SjG-FG-iZW"/>
@@ -24,17 +27,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8b4-Zl-yJD" userLabel="Label - Tracking Lost">
-                    <rect key="frame" x="0.0" y="684" width="1024" height="84"/>
-                    <color key="backgroundColor" red="0.0" green="0.76471763839999995" blue="1" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
-                    <string key="text">Tracking lost!
-Try to re-align or press reset.</string>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="36"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                    <size key="shadowOffset" width="0.0" height="0.0"/>
-                </label>
-                <label hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请连接3d扫描设备" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ly-If-uZh" userLabel="Label - App Status Message">
+                <label hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请连接结构传感器" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ly-If-uZh" userLabel="Label - App Status Message">
                     <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <accessibility key="accessibilityConfiguration">
@@ -44,6 +37,16 @@ Try to re-align or press reset.</string>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="36"/>
                     <color key="textColor" red="0.66666668653488159" green="0.66666668653488159" blue="0.66666668653488159" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
+                </label>
+                <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8b4-Zl-yJD" userLabel="Label - Tracking Lost">
+                    <rect key="frame" x="0.0" y="684" width="1024" height="84"/>
+                    <color key="backgroundColor" red="0.0" green="0.76471763839999995" blue="1" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
+                    <string key="text">Tracking lost!
+Try to re-align or press reset.</string>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="36"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                    <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J7F-Wp-rfI" userLabel="Button - Scan">
                     <rect key="frame" x="914" y="339" width="90" height="90"/>
@@ -81,10 +84,69 @@ Try to re-align or press reset.</string>
                         <action selector="resetButtonPressed:" destination="-1" eventType="touchUpInside" id="suT-EL-8hh"/>
                     </connections>
                 </button>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="roX-oJ-mYx">
+                <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZO4-Cr-gAY" userLabel="BuyView">
+                    <rect key="frame" x="332" y="80" width="360" height="56"/>
+                    <subviews>
+                        <view opaque="NO" contentMode="scaleToFill" id="ZGS-3J-r1Z" userLabel="viewBg">
+                            <rect key="frame" x="0.0" y="0.0" width="360" height="56"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image-wvl-calibration" translatesAutoresizingMaskIntoConstraints="NO" id="juq-GJ-5bI">
+                                    <rect key="frame" x="4" y="4" width="48" height="48"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="48" id="ZU9-bZ-VBp"/>
+                                        <constraint firstAttribute="width" constant="48" id="bev-tb-6gy"/>
+                                        <constraint firstAttribute="width" secondItem="juq-GJ-5bI" secondAttribute="height" multiplier="1024:1024" id="dpr-Hn-UGa"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="如果您还没有结构传感器，您可以去购买" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ah-mp-Kuz">
+                                    <rect key="frame" x="64" y="4" width="300" height="22"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="22" id="mFH-fX-bzk"/>
+                                        <constraint firstAttribute="width" constant="300" id="sqY-QP-Vm6"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jEe-M9-tQi">
+                                    <rect key="frame" x="64" y="30" width="82" height="22"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="22" id="ft8-ge-vKL"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <state key="normal" title="现在去购买">
+                                        <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="buyNowButtonPressed:" destination="-1" eventType="touchUpInside" id="dZM-MF-Bal"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.70261665240000004" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="0Ah-mp-Kuz" secondAttribute="trailing" id="0jn-M6-IIx"/>
+                                <constraint firstItem="jEe-M9-tQi" firstAttribute="leading" secondItem="juq-GJ-5bI" secondAttribute="trailing" constant="12" id="2li-qQ-j34"/>
+                                <constraint firstItem="0Ah-mp-Kuz" firstAttribute="top" secondItem="ZGS-3J-r1Z" secondAttribute="top" constant="4" id="U8H-Dq-Iop"/>
+                                <constraint firstItem="jEe-M9-tQi" firstAttribute="top" secondItem="0Ah-mp-Kuz" secondAttribute="bottom" constant="4" id="Y3Q-f0-zDb"/>
+                                <constraint firstAttribute="bottom" secondItem="juq-GJ-5bI" secondAttribute="bottom" constant="4" id="Zrn-Lz-M9M"/>
+                                <constraint firstItem="juq-GJ-5bI" firstAttribute="leading" secondItem="ZGS-3J-r1Z" secondAttribute="leading" constant="4" id="c87-Cf-hPn"/>
+                                <constraint firstItem="juq-GJ-5bI" firstAttribute="top" secondItem="ZGS-3J-r1Z" secondAttribute="top" constant="4" id="jhg-H5-2VC"/>
+                                <constraint firstAttribute="bottom" secondItem="jEe-M9-tQi" secondAttribute="bottom" constant="4" id="lxZ-vm-CAx"/>
+                                <constraint firstItem="0Ah-mp-Kuz" firstAttribute="leading" secondItem="juq-GJ-5bI" secondAttribute="trailing" constant="12" id="rt2-gY-A2m"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="1er-Pf-Aan"/>
+                        <constraint firstAttribute="width" constant="360" id="aZ2-wT-ejQ"/>
+                    </constraints>
+                </view>
+                <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="roX-oJ-mYx" userLabel="UpdateView">
                     <rect key="frame" x="332" y="20" width="360" height="56"/>
                     <subviews>
-                        <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" id="50o-bM-3Ow" userLabel="Firmware update view">
+                        <view opaque="NO" contentMode="scaleToFill" ambiguous="YES" id="50o-bM-3Ow" userLabel="viewBg">
                             <rect key="frame" x="0.0" y="0.0" width="360" height="56"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -96,7 +158,7 @@ Try to re-align or press reset.</string>
                                         <constraint firstAttribute="width" constant="48" id="Mcx-3C-feh"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Latest firmware needed for best results." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LZ4-cX-ezj">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="想获得最佳效果，需要更新固件。" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LZ4-cX-ezj">
                                     <rect key="frame" x="64" y="4" width="300" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="300" id="5FC-SL-lSx"/>
@@ -107,17 +169,20 @@ Try to re-align or press reset.</string>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NaF-kT-9aK">
-                                    <rect key="frame" x="64" y="30" width="90" height="22"/>
+                                    <rect key="frame" x="64" y="30" width="66" height="22"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="22" id="3yf-2v-gcT"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                    <state key="normal" title="Update Now">
+                                    <state key="normal" title="现在更新">
                                         <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
+                                    <connections>
+                                        <action selector="updateNowButtonPressed:" destination="-1" eventType="touchUpInside" id="HYm-1d-WRY"/>
+                                    </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.70261665239726023" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.70261665239726023" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="LZ4-cX-ezj" firstAttribute="top" secondItem="50o-bM-3Ow" secondAttribute="top" constant="4" id="2It-CW-7nX"/>
                                 <constraint firstAttribute="bottom" secondItem="Iok-Lg-Zzt" secondAttribute="bottom" constant="4" id="3wI-Ei-xzq"/>
@@ -133,8 +198,8 @@ Try to re-align or press reset.</string>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="56" id="dBL-lt-qap"/>
-                        <constraint firstAttribute="width" constant="360" id="sEQ-Is-Q1U"/>
+                        <constraint firstAttribute="width" constant="360" id="3iY-WF-nZ9"/>
+                        <constraint firstAttribute="height" constant="56" id="ZWc-Iy-BzW"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="电量:0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yuP-Zb-bua">
@@ -161,22 +226,24 @@ Try to re-align or press reset.</string>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="6ly-If-uZh" secondAttribute="bottom" id="0eh-TY-f6N"/>
                 <constraint firstItem="mZb-la-8Ct" firstAttribute="centerX" secondItem="ten-ab-OVy" secondAttribute="centerX" id="By1-W0-nxx"/>
+                <constraint firstItem="ZO4-Cr-gAY" firstAttribute="leading" secondItem="roX-oJ-mYx" secondAttribute="leading" id="I07-w9-tUz"/>
                 <constraint firstItem="mZb-la-8Ct" firstAttribute="centerY" secondItem="J7F-Wp-rfI" secondAttribute="centerY" id="L6q-XC-guk"/>
                 <constraint firstAttribute="trailing" secondItem="6ly-If-uZh" secondAttribute="trailing" id="QE8-NK-kvX"/>
+                <constraint firstItem="ZO4-Cr-gAY" firstAttribute="top" secondItem="roX-oJ-mYx" secondAttribute="top" constant="60" id="SSb-VV-8eG"/>
                 <constraint firstItem="ten-ab-OVy" firstAttribute="top" secondItem="mZb-la-8Ct" secondAttribute="bottom" constant="40" id="Sy8-1m-1JR"/>
                 <constraint firstItem="5Xc-Zv-uR2" firstAttribute="top" secondItem="1" secondAttribute="top" id="Szi-Cd-wRg"/>
                 <constraint firstItem="6ly-If-uZh" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="X5t-8h-bVU"/>
                 <constraint firstItem="8b4-Zl-yJD" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="Xxi-q3-0vj"/>
                 <constraint firstItem="6ly-If-uZh" firstAttribute="top" secondItem="1" secondAttribute="top" id="Zyd-kR-EXJ"/>
                 <constraint firstAttribute="trailing" secondItem="yuP-Zb-bua" secondAttribute="trailing" constant="20" id="ah8-n9-Rg0"/>
-                <constraint firstItem="roX-oJ-mYx" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="cTY-Ue-beb"/>
-                <constraint firstItem="roX-oJ-mYx" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="fop-zd-86d"/>
                 <constraint firstItem="8b4-Zl-yJD" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="hZU-FA-zyJ"/>
                 <constraint firstAttribute="trailing" secondItem="8b4-Zl-yJD" secondAttribute="trailing" id="het-Q4-fEt"/>
                 <constraint firstItem="ten-ab-OVy" firstAttribute="top" secondItem="J7F-Wp-rfI" secondAttribute="bottom" constant="40" id="jxo-EK-1XW"/>
                 <constraint firstItem="6ly-If-uZh" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="mHh-tL-oxO"/>
                 <constraint firstItem="mZb-la-8Ct" firstAttribute="centerY" secondItem="1" secondAttribute="centerY" id="nAG-cT-Nwr"/>
                 <constraint firstAttribute="trailing" secondItem="mZb-la-8Ct" secondAttribute="trailing" constant="20" id="oVy-4p-MMI"/>
+                <constraint firstItem="roX-oJ-mYx" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="qhz-hD-tDc"/>
+                <constraint firstItem="roX-oJ-mYx" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="sMl-gK-5V5"/>
                 <constraint firstItem="8b4-Zl-yJD" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="srf-sg-47b"/>
                 <constraint firstItem="yuP-Zb-bua" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="uD0-Yk-QWg"/>
                 <constraint firstItem="mZb-la-8Ct" firstAttribute="centerX" secondItem="J7F-Wp-rfI" secondAttribute="centerX" id="xUO-OW-tie"/>

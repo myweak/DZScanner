@@ -14,4 +14,13 @@
     return @{ @"item" : [RrAddressModel class]};
 }
 
+
+- (NSString *)areaName{
+    if (checkStrEmty(_areaName)) {
+        return @"";
+    }
+    return _areaName;
+    
+}
+
 @end

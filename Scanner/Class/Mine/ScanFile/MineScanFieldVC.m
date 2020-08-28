@@ -173,7 +173,7 @@
 
 // MARK: 空白页显示详细描述
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
-    NSString *text = @"暂无相关产品昵";
+    NSString *text = @"暂无相关数据昵";
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;

@@ -19,6 +19,7 @@
     self.rightBtn.layer.borderWidth = 1.0f;
     self.rightBtn.layer.borderColor = [UIColor c_btn_Bg_Color].CGColor;
     [self.contenViewBg bezierPathWithRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight) cornerRadius:7.0f];
+    [self.contenViewBg setBackgroundColor:[UIColor whiteColor]];
 }
 
 - (void)setModel:(RrDidProductDeTailModel *)model{

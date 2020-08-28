@@ -34,6 +34,6 @@ pod 'FMDB'
 pod 'JPush', '~> 3.3.3' # 极光推送
 pod 'UMengAnalytics'
 #pod 'UMCCommon'
-pod 'LLDebugTool' ,:configurations => ['Debug']
+#pod 'LLDebugTool' ,:configurations => ['Debug']
 
 end

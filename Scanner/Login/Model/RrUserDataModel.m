@@ -11,6 +11,7 @@
 @implementation RrUserDataModel
 
 
+static dispatch_once_t onceToken;
 
 + (NSDictionary *)mj_replacedKeyFromPropertyName {
     
@@ -38,7 +39,6 @@
 +(instancetype)sharedDataModel
 {
     static RrUserDataModel *singleton = nil;
-    static dispatch_once_t onceToken;
     // dispatch_once  无论使用多线程还是单线程，都只执行一次
     dispatch_once(&onceToken, ^{
         singleton = [[RrUserDataModel alloc] init];
@@ -77,6 +77,7 @@ Rr_CodingImplementation
     _userModel = nil;
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:KUserDataTitle];
+    [self clear];
     [defaults synchronize];
 }
 - (RrUserDataModel *)userModel{
@@ -85,7 +86,9 @@ Rr_CodingImplementation
     }
     return _userModel;
 }
-
+- (void)clear {
+    onceToken   = 0;
+}
 
 //获取个人信息
 + (void)updateUserInfo{

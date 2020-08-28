@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -10,6 +10,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RrChangeWordVC">
             <connections>
+                <outlet property="enSourceBtTwo" destination="ide-rH-bWc" id="AsW-AM-W2u"/>
+                <outlet property="enSourceBtnOne" destination="ZZn-T3-bwS" id="K6g-C3-Yfp"/>
                 <outlet property="oneLabel" destination="bRA-CT-IVI" id="7Kj-iP-bM8"/>
                 <outlet property="oneViewBg" destination="mSl-r6-sib" id="H7M-7E-QDg"/>
                 <outlet property="textFieldOne" destination="RID-Bf-2eI" id="jqb-KV-uXY"/>
@@ -46,19 +48,33 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="60" id="La2-Vb-DxF"/>
                             </constraints>
-                            <nil key="textColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
+                        <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZn-T3-bwS">
+                            <rect key="frame" x="707" y="10" width="60" height="60"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="N6d-Fl-Nzy"/>
+                                <constraint firstAttribute="height" constant="60" id="Vez-Vm-D9L"/>
+                            </constraints>
+                            <state key="normal" image="kejian-2"/>
+                            <state key="selected" image="kejian-3"/>
+                            <connections>
+                                <action selector="ensoureBtnAction:" destination="-1" eventType="touchUpInside" id="2lW-KS-ivO"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
+                        <constraint firstItem="ZZn-T3-bwS" firstAttribute="centerY" secondItem="RID-Bf-2eI" secondAttribute="centerY" id="1an-5b-WjS"/>
                         <constraint firstItem="bRA-CT-IVI" firstAttribute="leading" secondItem="mSl-r6-sib" secondAttribute="leading" id="9MW-mC-h06"/>
                         <constraint firstAttribute="trailing" secondItem="RID-Bf-2eI" secondAttribute="trailing" constant="17" id="9WE-tP-9tk"/>
                         <constraint firstAttribute="bottom" secondItem="bRA-CT-IVI" secondAttribute="bottom" id="BPz-RS-elP"/>
                         <constraint firstItem="RID-Bf-2eI" firstAttribute="leading" secondItem="bRA-CT-IVI" secondAttribute="trailing" id="NdB-fB-9Ib"/>
                         <constraint firstAttribute="height" constant="60" id="lL7-Cm-yRE"/>
                         <constraint firstItem="RID-Bf-2eI" firstAttribute="centerY" secondItem="bRA-CT-IVI" secondAttribute="centerY" id="nzn-nk-ekD"/>
+                        <constraint firstItem="ZZn-T3-bwS" firstAttribute="trailing" secondItem="RID-Bf-2eI" secondAttribute="trailing" id="pZQ-pc-znO"/>
                         <constraint firstItem="bRA-CT-IVI" firstAttribute="top" secondItem="mSl-r6-sib" secondAttribute="top" constant="20" id="toJ-4H-oeL"/>
                     </constraints>
                 </view>
@@ -79,15 +95,30 @@
                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
+                        <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ide-rH-bWc">
+                            <rect key="frame" x="707" y="10" width="60" height="60"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="99q-Ju-KQc"/>
+                                <constraint firstAttribute="width" constant="60" id="oMb-OI-XEO"/>
+                            </constraints>
+                            <state key="normal" image="kejian-2"/>
+                            <state key="selected" image="kejian-3"/>
+                            <connections>
+                                <action selector="ensoureBtnAction:" destination="-1" eventType="touchUpInside" id="nKd-RD-0L2"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
+                        <constraint firstItem="ide-rH-bWc" firstAttribute="trailing" secondItem="IgR-DQ-rDM" secondAttribute="trailing" id="1UV-jp-Gbf"/>
                         <constraint firstItem="IgR-DQ-rDM" firstAttribute="top" secondItem="qui-7Q-MWx" secondAttribute="top" id="4qg-eA-Fjo"/>
                         <constraint firstAttribute="bottom" secondItem="qui-7Q-MWx" secondAttribute="bottom" id="9ui-8g-HyB"/>
                         <constraint firstItem="qui-7Q-MWx" firstAttribute="top" secondItem="9zW-rZ-LwO" secondAttribute="top" constant="20" id="Agm-83-hmv"/>
                         <constraint firstAttribute="trailing" secondItem="IgR-DQ-rDM" secondAttribute="trailing" constant="17" id="Boj-Yk-8GG"/>
                         <constraint firstItem="IgR-DQ-rDM" firstAttribute="bottom" secondItem="qui-7Q-MWx" secondAttribute="bottom" id="cUw-To-D3o"/>
                         <constraint firstItem="qui-7Q-MWx" firstAttribute="leading" secondItem="9zW-rZ-LwO" secondAttribute="leading" id="f7b-dm-2ql"/>
+                        <constraint firstItem="ide-rH-bWc" firstAttribute="centerY" secondItem="qui-7Q-MWx" secondAttribute="centerY" id="hIT-M7-SGS"/>
                         <constraint firstAttribute="height" constant="60" id="kqr-Yi-V2J"/>
                         <constraint firstItem="IgR-DQ-rDM" firstAttribute="leading" secondItem="qui-7Q-MWx" secondAttribute="trailing" id="sk9-cn-rqh"/>
                     </constraints>
@@ -142,6 +173,8 @@
         </view>
     </objects>
     <resources>
+        <image name="kejian-2" width="15.5" height="15"/>
+        <image name="kejian-3" width="15.5" height="15"/>
         <image name="login_btn_bg" width="1054" height="50"/>
         <image name="navi_back" width="13" height="21"/>
     </resources>

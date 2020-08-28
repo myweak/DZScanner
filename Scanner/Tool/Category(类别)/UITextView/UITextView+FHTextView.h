@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic) NSNumber *limitLength;//限制字数
 - (UIColor *)defaultPlaceholderColor;
 
+// 限制UITextView 小数位数为2位
+- (BOOL)shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
 @end
 
 NS_ASSUME_NONNULL_END

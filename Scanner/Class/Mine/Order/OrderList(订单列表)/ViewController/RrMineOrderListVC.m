@@ -148,6 +148,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     RrMineOrderListModel *model = self.listArr[indexPath.section];
+    if (checkStrEmty( model.outTradeNo)) {
+        showMessage(@"订单号出错");
+        return;
+    }
     RrMineOrderListDetailVC *detailVc = [RrMineOrderListDetailVC new];
     detailVc.outTradeNo = model.outTradeNo;
     [self.navigationController pushViewController:detailVc animated:YES];
@@ -200,12 +204,14 @@
     if (checkStrEmty(model.outTradeNo)) {
         return;
     }
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     [[RRNetWorkingManager sharedSessionManager]  putOrderPayNotifi:@{@"outTradeNo":model.outTradeNo} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         if (!error) {
             showMessage(@"已发送付款提醒");
         }else{
             showMessage(responseModel.msg);
         }
+        [SVProgressHUD dismiss];
     }, nil)];
 }
 
@@ -224,6 +230,7 @@
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self)
+                [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
                 [self.tableView.mj_header beginRefreshing];
             });
         }
@@ -266,9 +273,11 @@
                 [self.tableView reloadData];
             });
         }
-        [self.tableView.mj_header endRefreshing];
-        [self.tableView.mj_footer endRefreshing];
-        
+        if (!responseModel.isCashEQO) {
+            [self.tableView.mj_header endRefreshing];
+            [self.tableView.mj_footer endRefreshing];
+            [SVProgressHUD dismiss];
+        }
         
         
     }, [RrMineOrderListModel class])];

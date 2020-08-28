@@ -15,7 +15,7 @@ static BOOL isDisMiss;
 
 @interface JassonSTLVC ()
 @property (nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
-//@property (nonatomic, assign) BOOL isDisMiss;
+@property (nonatomic, assign) BOOL isReStartZip;//重新解压 机制
 @end
 
 @implementation JassonSTLVC
@@ -41,6 +41,7 @@ static BOOL isDisMiss;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.isReStartZip = YES;
     if (self.title == nil || self.title.length == 0) {
         self.title = @"3D模型预览";
     }
@@ -93,7 +94,12 @@ static BOOL isDisMiss;
         if (!resultStl) {
             BOOL succes = [SSZipArchive unzipFileAtPath:filePath toDestination:pathDocument];
             if (!succes) {
-                showMessage(@"文件解压失败");
+                if (self.isReStartZip) {
+                    self.isReStartZip = NO;
+                    [self downloadUrl];
+                    return;
+                }
+                showMessage(@"文件解压失败,请重新解压");
                 [SVProgressHUD dismiss];
                 return;
             }
@@ -123,7 +129,12 @@ static BOOL isDisMiss;
             if (succes) {
                 [self showJassonSTLViewWithFilePath:[self zipFieldFormatToStl]];
             }else{
-                showMessage(@"文件解压失败");
+                if (self.isReStartZip) {
+                    self.isReStartZip = NO;
+                    [self downloadUrl];
+                    return;
+                }
+                showMessage(@"文件解压失败,请重新解压！");
                 [SVProgressHUD dismiss];
             }
         });

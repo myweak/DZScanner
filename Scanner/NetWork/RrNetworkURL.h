@@ -12,14 +12,14 @@
 
 //=========================================================================
 #ifdef DEBUG // 加Debug宏，两层约束，免得遗忘关闭
-    #define Test_Env // 测试宏
+    #define Test_Env  1  // 测试宏
 #endif
 //-----
 #ifdef Test_Env
 
-    static NSString *const RrDBaseUrl = @"https://dev.goto-recovery.com";  //开发式服
+//    static NSString *const RrDBaseUrl = @"https://dev.goto-recovery.com";  //开发式服
     // 主域名
-//      static NSString *const RrDBaseUrl = @"https://uat.goto-recovery.com";
+      static NSString *const RrDBaseUrl = @"https://uat.goto-recovery.com";
 
 //      static NSString *const RrDBaseUrl = @"http://192.168.2.31:30000";//模拟dev
 
@@ -29,6 +29,8 @@
 
 #else
 //----------------------------生产环境star--------------------------------
+//static NSString *const RrDBaseUrl = @"https://uat.goto-recovery.com";
+
 static NSString * const RrDBaseUrl = @"https://api.rrdkf.com";
 //-----------------------------end-------------------------------
 

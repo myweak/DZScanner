@@ -1,12 +1,12 @@
 /*
-  This file is part of the Structure SDK.
-  Copyright © 2019 rrd, Inc. All rights reserved.
-  http://structure.io
-*/
+ This file is part of the Structure SDK.
+ Copyright © 2019 rrd, Inc. All rights reserved.
+ http://structure.io
+ */
 
 
 
-
+#define KBuy_title @"现在去购买"
 #import "ViewController.h"
 #import "ViewController+CaptureSession.h"
 #import "ViewController+SLAM.h"
@@ -17,7 +17,7 @@
 #include <cmath>
 #include <algorithm>
 #import "RrStucture.h"
-
+#import "CheckUserInfoVC.h"
 #pragma mark - ViewController Setup
 
 @interface ViewController (){
@@ -49,34 +49,35 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [self setupGL];
-
+    
     [self setupUserInterface];
-
+    
     [self setupMeshViewController];
-
+    
     [self setupGestures];
-
-//    [self setupCaptureSession];
-
+    
+    //    [self setupCaptureSession];
+    
     [self setupSLAM];
-
+    
     //关注电池用量
     [self startBatteryTimer];
     
     // Later, we’ll set this true if we have a device-specific calibration
     _useColorCamera = true;
-
+    
     // Make sure we get notified when the app becomes active to start/restore the sensor state if necessary.
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appDidBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
-
+    
     [self initializeDynamicOptions];
     [self enterCubePlacementState];
     
+    [self firstEnterShowBuyView]; // xiao   第一次如果没有连接过传感器，需要提示
     
     //后台返回时刷新界面
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -85,15 +86,22 @@
                                                object:nil];
 }
 
+- (void)firstEnterShowBuyView{
+    if ([RrUserDefaults getBoolValueInUDWithKey:KBuy_title]) {
+        return;
+    }
+    self.buyView_top.constant = 0;
+    self.buyView.layer.zPosition = 103;
+    self.buyView.hidden = NO;
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     [MobClick beginLogPageView:@"3D扫描"];
     self.hidenLeftTaBar = YES;
-    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
-//    [self clearSLAM];
     [self setupSLAM];
-
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -101,22 +109,21 @@
     [super viewWillDisappear:animated];
     [MobClick endLogPageView:@"3D扫描"];
     self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = YES;
+//    self.hidenLeftTaBar = NO;
 }
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    self.hidenLeftTaBar = NO;
-}
+
 
 
 #pragma mark - 清除内存
 - (void)clearCash{
+    [self resetSLAM];
     [self clearSLAM];
     if ([EAGLContext currentContext] == _display.context)
     {
         [EAGLContext setCurrentContext:nil];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
+    
     [_updateBatteryDisplayTimer invalidate];
     _updateBatteryDisplayTimer = nil;
     
@@ -141,20 +148,24 @@
     for (UIView *view in self.view.subviews) {
         [view removeFromSuperview];
     }
+    self.hidenLeftTaBar = NO;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
+    self.hidenLeftTaBar = YES;
+    self.navigationController.fd_fullscreenPopGestureRecognizer.enabled = NO;
+    
     // The framebuffer will only be really ready with its final size after the view appears.
     [(EAGLView *)self.view setFramebuffer];
-
+    
     [self setupGLViewport];
-
+    
     [self updateAppStatusMessage];
-
-
+    
+    
     // We will connect to the sensor when we receive appDidBecomeActive.
 }
 #pragma mark 电视电量🔋
@@ -166,7 +177,7 @@
     {
         _captureSession.streamingEnabled = YES;
     }
-
+    
     // Abort the current scan if we were still scanning before going into background since we
     // are not likely to recover well.
     if (_slamState.scannerState == ScannerStateScanning)
@@ -199,17 +210,21 @@
         return;
     }
     NSInteger percentage = _captureSession.sensorBatteryLevel;
-    self.battertLabel.hidden = NO;
+     self.battertLabel.hidden = NO;
+    if (percentage == 0) {
+         self.battertLabel.hidden = YES;
+    }
+   
     NSString *batter = [NSString stringWithFormat:@"电量:%ld%%",(long)percentage];
     [self.battertLabel setText:batter];
     // 弹窗
-     static BOOL isPercentage;
- 
+    static BOOL isPercentage;
+    
     if (!isPercentage &&  percentage <10 && [_captureSession isSensorChargerConnected]) {
         percentage = YES;
-        [self AlertWithTitle:nil message:@"Structure Sensor电量低于10%，请及时充电！" andOthers:@[@"确定"] animated:YES action:^(NSInteger index) {
-//            [self backPop:nil];
-                      }];
+        [self AlertWithTitle:nil message:@"结构传感器电量低于10%，请及时充电！" andOthers:@[@"确定"] animated:YES action:^(NSInteger index) {
+            //            [self backPop:nil];
+        }];
         return;
     }
     
@@ -219,7 +234,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-
+    
     [self respondToMemoryWarning];
 }
 
@@ -245,24 +260,27 @@
                                       constant:150]]];
     
     [self onSLAMOptionsChanged];
-
+    
     
 }
-    
 
-  
+
+
 - (void)setupUserInterface
 {
     // Make sure the status bar is hidden.
     [self prefersStatusBarHidden];
-
+    
     // Fully transparent message label, initially.
     self.appStatusMessageLabel.alpha = 0;
+    
+    self.firmwareUpdateView.layer.cornerRadius = 8.0;
 
+    
     // Make sure the label is on top of everything else.
     self.appStatusMessageLabel.layer.zPosition = 100;
     self.backButton.layer.zPosition = 101;
-
+    
 }
 
 // Make sure the status bar is disabled (iOS 7+)
@@ -291,41 +309,41 @@
 - (void)presentMeshViewer:(STMesh *)mesh
 {
     [_meshViewController setupGL:_display.context];
-
+    
     _meshViewController.colorEnabled = _useColorCamera;
     _meshViewController.mesh = mesh;
     [_meshViewController setCameraProjectionMatrix:_display.depthCameraGLProjectionMatrix];
-
+    
     // Sample a few points to estimate the volume center
     int totalNumVertices = 0;
     for( int i=0; i<mesh.numberOfMeshes; ++i )
         totalNumVertices += [mesh numberOfMeshVertices:i];
-
+    
     // The sample step if we need roughly 1000 sample points
     int sampleStep = std::max (1.f, totalNumVertices/1000.f);
     int sampleCount = 0;
     GLKVector3 volumeCenter = GLKVector3Make(0,0,0);
-
+    
     for( int i=0; i<mesh.numberOfMeshes; ++i )
     {
         int numVertices = [mesh numberOfMeshVertices:i];
         const GLKVector3* vertex = [mesh meshVertices:i];
-
+        
         for( int j=0; j<numVertices; j+=sampleStep )
         {
             volumeCenter = GLKVector3Add(volumeCenter, vertex[j]);
             sampleCount++;
         }
     }
-
+    
     if( sampleCount>0 )
         volumeCenter = GLKVector3DivideScalar(volumeCenter, sampleCount);
-
+    
     else
         volumeCenter = GLKVector3MultiplyScalar(_slamState.volumeSizeInMeters, 0.5);
-
+    
     [_meshViewController resetMeshCenter:volumeCenter];
-
+    
     [self presentViewController:_meshViewNavigationController animated:YES completion:^{}];
 }
 
@@ -335,32 +353,32 @@
     self.scanButton.hidden = NO;
     self.doneButton.hidden = YES;
     self.resetButton.hidden = YES;
-
+    
     // We'll enable the button only after we get some initial pose.
     self.scanButton.enabled = NO;
-
+    
     // Cannot be lost in cube placement mode.
     _trackingLostLabel.hidden = YES;
-
-//    [_settingsPopupView enableAllSettingsDuringCubePlacement];
-
+    
+    //    [_settingsPopupView enableAllSettingsDuringCubePlacement];
+    
     _captureSession.streamingEnabled = YES;
     _captureSession.properties = STCaptureSessionPropertiesSetColorCameraAutoExposureISOAndWhiteBalance();
-
+    
     _slamState.scannerState = ScannerStateCubePlacement;
-
+    
     [self updateIdleTimer];
     
     if (_slamState.cameraPoseInitializer != nil)
     {
         float xOffset = _slamState.cameraPoseInitializer.volumeSizeInMeters.x / 2.0;
         float yOffset = _slamState.cameraPoseInitializer.volumeSizeInMeters.y / 2.0;
-    
-//        int distance = (int)[RrUserDefaults getIntValueInUDWithKey:Distance];
+        
+        //        int distance = (int)[RrUserDefaults getIntValueInUDWithKey:Distance];
         NSInteger distanceSegmentedIndex =  [RrUserDefaults getIntValueInUDWithKey:DistanceSegmentedIndex];
         //设置距离
         _slamState.cubePose = GLKMatrix4Translate(GLKMatrix4Identity, xOffset, yOffset, -((40+(distanceSegmentedIndex*10))/100.0));
-
+        
     }
 }
 
@@ -372,18 +390,18 @@
         NSLog(@"Warning: not accepting to enter into scanning state since the initial pose is not valid.");
         return;
     }
-
+    
     // Switch to the Done button.
     self.scanButton.hidden = YES;
     self.doneButton.hidden = NO;
     self.resetButton.hidden = NO;
-
-//    [_settingsPopupView disableNonDynamicSettingsDuringScanning];
-
+    
+    //    [_settingsPopupView disableNonDynamicSettingsDuringScanning];
+    
     // Prepare the mapper for the new scan.
     [self setupMapper];
-
-//    _slamState.tracker.initialCameraPose = _slamState.initialDepthCameraPose;
+    
+    //    _slamState.tracker.initialCameraPose = _slamState.initialDepthCameraPose;
     GLKMatrix4 colorCameraPoseInSensorCoordinateSpace = GLKMatrix4();
     [[STSensorController sharedController] colorCameraPoseInSensorCoordinateFrame:colorCameraPoseInSensorCoordinateSpace.m];
     bool invertible;
@@ -393,10 +411,10 @@
         _slamState.cubePose = GLKMatrix4Multiply(_slamState.cubePose, colorCameraInversePose);
         _slamState.tracker.initialCameraPose = _slamState.cubePose;
     }
-
+    
     // We will lock exposure during scanning to ensure better coloring.
     _captureSession.properties = STCaptureSessionPropertiesLockAllColorCameraPropertiesToCurrent();
-
+    
     _slamState.scannerState = ScannerStateScanning;
 }
 
@@ -429,6 +447,18 @@
     
     [self updateIdleTimer];
 }
+// 更新
+- (IBAction)updateNowButtonPressed:(UIButton *)sender {
+ 
+    launchStructureAppOrGoToAppStore();
+
+}
+// `购买
+- (IBAction)buyNowButtonPressed:(UIButton *)sender{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://structure.io/buy-a-sensor"] options:nil completionHandler:nil];
+}
+
+
 
 #pragma mark -  Structure Sensor Management
 
@@ -436,12 +466,12 @@
 {
     switch (_slamState.scannerState)
     {
-        // Initialization and scanning need the sensor.
+            // Initialization and scanning need the sensor.
         case ScannerStateCubePlacement:
         case ScannerStateScanning:
             return TRUE;
-
-        // Other states don't need the sensor.
+            
+            // Other states don't need the sensor.
         default:
             return FALSE;
     }
@@ -456,7 +486,7 @@
         // Update our gravity vector, it will be used by the cube placement initializer.
         _lastGravity = GLKVector3Make (motion.gravity.x, motion.gravity.y, motion.gravity.z);
     }
-
+    
     if (_slamState.scannerState == ScannerStateCubePlacement || _slamState.scannerState == ScannerStateScanning)
     {
         // The tracker is more robust to fast moves if we feed it with motion data.
@@ -472,34 +502,34 @@
     _dynamicOptions.highResColoring = highResolutionColorEnabled;
     _dynamicOptions.depthStreamPreset = depthStreamPresetMode;
     [RrUserDefaults saveBoolValueInUD:highResolutionColorEnabled forKey:HighResolutionColor];
-//    [self setupCaptureSession];
+        [self setupCaptureSession];
     _captureSession.streamingEnabled = YES;
     
-    {
-            NSString *firstKey = @"第一次要链接设备要提示!!";
-            BOOL isFirst  = [RrUserDefaults getBoolValueInUDWithKey:firstKey];
-            // 弹窗
-        __weak typeof(self) weakSelf = self;
-    
-            if (!isFirst) {
-                [self AlertWithTitle:@"提示" message:@"APP需要连接Structure Sensor" andOthers:@[@"取消",@"确定"] animated:NO action:^(NSInteger index) {
-                        if (index == 0) {
-                            [weakSelf gotoBackButtonArion:nil];
-                        }else{
-                            [RrUserDefaults saveBoolValueInUD:YES forKey:firstKey];
-                            [weakSelf setupCaptureSession];
-                            self->_captureSession.streamingEnabled = YES;
-                            [weakSelf resetSLAM];
-                            [weakSelf clearSLAM];
-                            [weakSelf setupSLAM];
-
-                        }
-                    }];
-            }else{
-              [self setupCaptureSession];
-            _captureSession.streamingEnabled = YES;
-            }
-        }
+//    {
+//        NSString *firstKey = @"第一次要链接设备要提示!!";
+//        BOOL isFirst  = [RrUserDefaults getBoolValueInUDWithKey:firstKey];
+//        // 弹窗
+//        __weak typeof(self) weakSelf = self;
+//
+//        if (!isFirst) {
+//            [self AlertWithTitle:@"提示" message:@"APP需要连接Structure Sensor" andOthers:@[@"取消",@"确定"] animated:NO action:^(NSInteger index) {
+//                if (index == 0) {
+//                    [weakSelf gotoBackButtonArion:nil];
+//                }else{
+//                    [RrUserDefaults saveBoolValueInUD:YES forKey:firstKey];
+//                    [weakSelf setupCaptureSession];
+//                    self->_captureSession.streamingEnabled = YES;
+//                    [weakSelf resetSLAM];
+//                    [weakSelf clearSLAM];
+//                    [weakSelf setupSLAM];
+//
+//                }
+//            }];
+//        }else{
+//            [self setupCaptureSession];
+//            _captureSession.streamingEnabled = YES;
+//        }
+//    }
     
 }
 
@@ -509,12 +539,12 @@
 {
     _captureSession.properties =
     @{
-      kSTCaptureSessionPropertySensorIRExposureModeKey:
-          @(irAutoExposureEnabled ? STCaptureSessionSensorExposureModeAuto : STCaptureSessionSensorExposureModeLockedToCustom),
-      kSTCaptureSessionPropertySensorIRExposureValueKey: @(irManualExposureValue),
-      kSTCaptureSessionPropertySensorIRAnalogGainValueKey: @(irAnalogGainValue)
-      };
-
+        kSTCaptureSessionPropertySensorIRExposureModeKey:
+            @(irAutoExposureEnabled ? STCaptureSessionSensorExposureModeAuto : STCaptureSessionSensorExposureModeLockedToCustom),
+        kSTCaptureSessionPropertySensorIRExposureValueKey: @(irManualExposureValue),
+        kSTCaptureSessionPropertySensorIRAnalogGainValueKey: @(irAnalogGainValue)
+    };
+    
     [RrUserDefaults saveBoolValueInUD:irAutoExposureEnabled forKey:IrAutoExposure];
 }
 
@@ -525,6 +555,8 @@
     _dynamicOptions.improvedTrackingIsOn = improvedTrackerEnabled;
     [RrUserDefaults saveBoolValueInUD:improvedTrackerEnabled forKey:ImprovedTracker];
     [self onSLAMOptionsChanged];
+
+
 }
 
 - (void) mapperSettingsDidChange:(BOOL)highResolutionMeshEnabled
@@ -535,6 +567,7 @@
     [RrUserDefaults saveBoolValueInUD:highResolutionMeshEnabled forKey:HighResolutionMesh];
     [RrUserDefaults saveBoolValueInUD:improvedMapperEnabled forKey:ImprovedMapper];
     [self onSLAMOptionsChanged];
+    
 }
 - (void) distanceDidChange:(int)distanceValue
 {
@@ -549,7 +582,7 @@
     [self resetSLAM];
     [self clearSLAM];
     [self setupSLAM];
-
+    
     // Restore the volume size cleared by the full reset.
     [self adjustVolumeSize:_slamState.volumeSizeInMeters];
 }
@@ -560,20 +593,20 @@
     volumeSize.x = keepInRange (volumeSize.x, 0.1, 3.f);
     volumeSize.y = keepInRange (volumeSize.y, 0.1, 3.f);
     volumeSize.z = keepInRange (volumeSize.z, 0.1, 3.f);
-
+    
     _slamState.volumeSizeInMeters = volumeSize;
-
+    
     _slamState.cameraPoseInitializer.volumeSizeInMeters = volumeSize;
     [_display.cubeRenderer adjustCubeSize:_slamState.volumeSizeInMeters];
     
     float xOffset = _slamState.cameraPoseInitializer.volumeSizeInMeters.x / 2.0;
     float yOffset = _slamState.cameraPoseInitializer.volumeSizeInMeters.y / 2.0;
     
-//    int distance = (int)[RrUserDefaults getIntValueInUDWithKey:Distance];
+    //    int distance = (int)[RrUserDefaults getIntValueInUDWithKey:Distance];
     NSInteger distanceSegmentedIndex =  [RrUserDefaults getIntValueInUDWithKey:DistanceSegmentedIndex];
     
     _slamState.cubePose = GLKMatrix4Translate(GLKMatrix4Identity, xOffset, yOffset, -((40+(distanceSegmentedIndex*10))/100.0));
-
+    
 }
 
 - (IBAction)scanButtonPressed:(id)sender
@@ -598,7 +631,7 @@
                                          userInfo:nil];
         }
     }
-
+    
     [self enterViewingState];
 }
 
@@ -632,10 +665,10 @@
 {
     _appStatus.needsDisplayOfStatusMessage = true;
     [self.view.layer removeAllAnimations];
-
+    
     [self.appStatusMessageLabel setText:msg];
     [self.appStatusMessageLabel setHidden:NO];
-
+    
     [UIView animateWithDuration:0.5f animations:^{
         self.appStatusMessageLabel.alpha = 1.0f;
     }completion:nil];
@@ -643,51 +676,59 @@
 
 - (void)hideAppStatusMessage
 {
-    [self.view.layer removeAllAnimations];
+    
 
+    [self.view.layer removeAllAnimations];
+    
     __weak ViewController *weakSelf = self;
     [UIView animateWithDuration:0.5f
                      animations:^{
-                         weakSelf.appStatusMessageLabel.alpha = 0.0f;
-                     }
+        weakSelf.appStatusMessageLabel.alpha = 0.0f;
+    }
                      completion:^(BOOL finished) {
-                         // If nobody called showAppStatusMessage before the end of the animation, do not hide it.
-                         if (!self->_appStatus.needsDisplayOfStatusMessage)
-                         {
-                             // Could be nil if the self is released before the callback happens.
-                             if (weakSelf) {
-                                 [weakSelf.appStatusMessageLabel setHidden:YES];
-                             }
-                         }
-     }];
+        // If nobody called showAppStatusMessage before the end of the animation, do not hide it.
+        if (!self->_appStatus.needsDisplayOfStatusMessage)
+        {
+            // Could be nil if the self is released before the callback happens.
+            if (weakSelf) {
+                [weakSelf.appStatusMessageLabel setHidden:YES];
+            }
+        }
+    }];
 }
 
 -(void)updateAppStatusMessage
 {
+    
     STCaptureSessionUserInstruction userInstructions = _captureSession.userInstructions;
-
+    
     bool needToConnectSensor = userInstructions & STCaptureSessionUserInstructionNeedToConnectSensor;
     bool needToChargeSensor = userInstructions & STCaptureSessionUserInstructionNeedToChargeSensor;
     bool needToAuthorizeColorCamera = userInstructions & STCaptureSessionUserInstructionNeedToAuthorizeColorCamera;
-
+    
     // If you don't want to display the overlay message when an approximate calibration
     // is available use `_captureSession.calibrationType >= STCalibrationTypeApproximate`
     bool needToRunCalibrator = userInstructions & STCaptureSessionUserInstructionNeedToRunCalibrator;
+    bool needToUpgradeFirmware = userInstructions & STCaptureSessionUserInstructionFirmwareUpdateRequired;
 
     if (needToConnectSensor)
     {
         [self showAppStatusMessage:_appStatus.pleaseConnectSensorMessage];
         return;
     }
-
+    
     if (_captureSession.sensorMode == STCaptureSessionSensorModeWakingUp)
     {
+        self.buyView.hidden = YES;
+        [RrUserDefaults saveBoolValueInUD:YES forKey:KBuy_title]; //有连接过传感器
         [self showAppStatusMessage:_appStatus.sensorIsWakingUpMessage];
         return;
     }
-
+    
     if (needToChargeSensor)
     {
+        self.buyView.hidden = YES;
+           [RrUserDefaults saveBoolValueInUD:YES forKey:KBuy_title]; //有连接过传感器
         [self showAppStatusMessage:_appStatus.pleaseChargeSensorMessage];
         return;
     }
@@ -695,10 +736,12 @@
     // Color camera permission issues.
     if (needToAuthorizeColorCamera)
     {
+        self.buyView.hidden = YES;
+        [RrUserDefaults saveBoolValueInUD:YES forKey:KBuy_title]; //有连接过传感器
         [self showAppStatusMessage:_appStatus.needColorCameraAccessMessage];
         return;
     }
-
+    
     if (_calibrationOverlay) { [_calibrationOverlay removeFromSuperview]; }
     if (needToRunCalibrator)
     {
@@ -730,12 +773,12 @@
                 self.battertLabel.hidden = YES;
                 break;
         }
-
+        
         const bool isIPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-
+        
         _calibrationOverlay = [[CalibrationOverlay alloc] initWithType:overlayType];
         [self.view addSubview:_calibrationOverlay];
-
+        
         // Center the calibration overlay in X
         [_calibrationOverlay.superview addConstraint:
          [NSLayoutConstraint constraintWithItem:_calibrationOverlay
@@ -745,7 +788,7 @@
                                       attribute:NSLayoutAttributeCenterX
                                      multiplier:1.0
                                        constant:0.0]];
-
+        
         if (overlayType == CalibrationOverlayTypeApproximate)
         {
             [_calibrationOverlay.superview addConstraint:
@@ -768,12 +811,17 @@
                                          multiplier:1.0
                                            constant:0.0]];
         }
-
+        
         if (!isIPad && overlayType != CalibrationOverlayTypeApproximate)
         {
             _calibrationOverlay.transform = CGAffineTransformMakeScale(0.85, 0.85);
         }
     }
+    
+    self.firmwareUpdateView.hidden = !needToUpgradeFirmware;
+    self.buyView.hidden = YES;
+    [RrUserDefaults saveBoolValueInUD:YES forKey:KBuy_title]; //有连接过传感器
+
 
     // If we reach this point, no status to show.
     [self hideAppStatusMessage];
@@ -796,12 +844,12 @@
             if (!isnan (_volumeScale.initialPinchScale))
             {
                 _volumeScale.currentScale = [gestureRecognizer scale] * _volumeScale.initialPinchScale;
-
+                
                 // Don't let our scale multiplier become absurd
                 _volumeScale.currentScale = keepInRange(_volumeScale.currentScale, 0.01, 1000.f);
-
+                
                 GLKVector3 newVolumeSize = GLKVector3MultiplyScalar(_options.initVolumeSizeInMeters, _volumeScale.currentScale);
-
+                
                 [self adjustVolumeSize:newVolumeSize];
             }
         }
@@ -823,7 +871,7 @@
         [_enhancedColorizeTask cancel];
         _enhancedColorizeTask = nil;
     }
-
+    
     [_meshViewController hideMeshViewerMessage];
 }
 
@@ -860,77 +908,77 @@
         NSLog(@"Already one colorizing task running!");
         return FALSE;
     }
-
+    
     _naiveColorizeTask = [STColorizer
-                     newColorizeTaskWithMesh:mesh
-                     scene:_slamState.scene
-                     keyframes:[_slamState.keyFrameManager getKeyFrames]
-                     completionHandler: ^(NSError *error)
-                     {
-                         if (error != nil) {
-                             NSLog(@"Error during colorizing: %@", [error localizedDescription]);
-                         }
-                         else
-                         {
-                             dispatch_async(dispatch_get_main_queue(), ^{
-                                 previewCompletionHandler();
-                                 self->_meshViewController.mesh = mesh;
-                                 [self performEnhancedColorize:(STMesh*)mesh enhancedCompletionHandler:enhancedCompletionHandler];
-                             });
-                             self->_naiveColorizeTask = nil;
-                         }
-                     }
-                     options:@{kSTColorizerTypeKey: @(STColorizerPerVertex),
-                               kSTColorizerPrioritizeFirstFrameColorKey: @(_options.prioritizeFirstFrameColor)}
-                     error:nil];
-
+                          newColorizeTaskWithMesh:mesh
+                          scene:_slamState.scene
+                          keyframes:[_slamState.keyFrameManager getKeyFrames]
+                          completionHandler: ^(NSError *error)
+                          {
+        if (error != nil) {
+            NSLog(@"Error during colorizing: %@", [error localizedDescription]);
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                previewCompletionHandler();
+                self->_meshViewController.mesh = mesh;
+                [self performEnhancedColorize:(STMesh*)mesh enhancedCompletionHandler:enhancedCompletionHandler];
+            });
+            self->_naiveColorizeTask = nil;
+        }
+    }
+                          options:@{kSTColorizerTypeKey: @(STColorizerPerVertex),
+                                    kSTColorizerPrioritizeFirstFrameColorKey: @(_options.prioritizeFirstFrameColor)}
+                          error:nil];
+    
     if (_naiveColorizeTask)
     {
         // Release the tracking and mapping resources. It will not be possible to resume a scan after this point
         [_slamState.mapper reset];
         [_slamState.tracker reset];
-
+        
         _naiveColorizeTask.delegate = self;
         [_naiveColorizeTask start];
         return TRUE;
     }
-
+    
     return FALSE;
 }
 
 - (void)performEnhancedColorize:(STMesh*)mesh enhancedCompletionHandler:(void (^)())enhancedCompletionHandler
 {
     _enhancedColorizeTask =[STColorizer
-       newColorizeTaskWithMesh:mesh
-       scene:_slamState.scene
-       keyframes:[_slamState.keyFrameManager getKeyFrames]
-       completionHandler: ^(NSError *error)
-       {
-           if (error != nil) {
-               NSLog(@"Error during colorizing: %@", [error localizedDescription]);
-           }
-           else
-           {
-               dispatch_async(dispatch_get_main_queue(), ^{
-                   enhancedCompletionHandler();
-                   self->_meshViewController.mesh = mesh;
-               });
-               self->_enhancedColorizeTask = nil;
-           }
-       }
-       options:@{kSTColorizerTypeKey: @(STColorizerTextureMapForObject),
-                 kSTColorizerPrioritizeFirstFrameColorKey: @(_options.prioritizeFirstFrameColor),
-                 kSTColorizerQualityKey: @(_options.colorizerQuality),
-                 kSTColorizerTargetNumberOfFacesKey: @(_options.colorizerTargetNumFaces)} // 20k faces is enough for most objects.
-       error:nil];
-
+                            newColorizeTaskWithMesh:mesh
+                            scene:_slamState.scene
+                            keyframes:[_slamState.keyFrameManager getKeyFrames]
+                            completionHandler: ^(NSError *error)
+                            {
+        if (error != nil) {
+            NSLog(@"Error during colorizing: %@", [error localizedDescription]);
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                enhancedCompletionHandler();
+                self->_meshViewController.mesh = mesh;
+            });
+            self->_enhancedColorizeTask = nil;
+        }
+    }
+                            options:@{kSTColorizerTypeKey: @(STColorizerTextureMapForObject),
+                                      kSTColorizerPrioritizeFirstFrameColorKey: @(_options.prioritizeFirstFrameColor),
+                                      kSTColorizerQualityKey: @(_options.colorizerQuality),
+                                      kSTColorizerTargetNumberOfFacesKey: @(_options.colorizerTargetNumFaces)} // 20k faces is enough for most objects.
+                            error:nil];
+    
     if (_enhancedColorizeTask)
     {
         // We don't need the keyframes anymore now that the final colorizing task was started.
         // Clearing it now gives a chance to early release the keyframe memory when the colorizer
         // stops needing them.
         [_slamState.keyFrameManager clear];
-
+        
         _enhancedColorizeTask.delegate = self;
         [_enhancedColorizeTask start];
     }
@@ -947,31 +995,31 @@
             if( _enhancedColorizeTask != nil && !_slamState.showingMemoryWarning )
             {
                 _slamState.showingMemoryWarning = true;
-
+                
                 // stop the task
                 [_enhancedColorizeTask cancel];
                 _enhancedColorizeTask = nil;
-
+                
                 // hide progress bar
                 [_meshViewController hideMeshViewerMessage];
-
+                
                 UIAlertController *alertCtrl= [UIAlertController alertControllerWithTitle:@"Memory Low"
                                                                                   message:@"Colorizing was canceled."
                                                                            preferredStyle:UIAlertControllerStyleAlert];
-
+                
                 UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK"
                                                                    style:UIAlertActionStyleDefault
                                                                  handler:^(UIAlertAction *action)
                                            {
-                                               self->_slamState.showingMemoryWarning = false;
-                                           }];
-
+                    self->_slamState.showingMemoryWarning = false;
+                }];
+                
                 [alertCtrl addAction:okAction];
-
+                
                 // show the alert in the meshViewController
                 [_meshViewController presentViewController:alertCtrl animated:YES completion:nil];
             }
-
+            
             break;
         }
         case ScannerStateScanning:
@@ -979,26 +1027,26 @@
             if( !_slamState.showingMemoryWarning )
             {
                 _slamState.showingMemoryWarning = true;
-
+                
                 UIAlertController *alertCtrl= [UIAlertController alertControllerWithTitle:@"Memory Low"
                                                                                   message:@"Scanning will be stopped to avoid loss."
                                                                            preferredStyle:UIAlertControllerStyleAlert];
-
+                
                 UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK"
                                                                    style:UIAlertActionStyleDefault
                                                                  handler:^(UIAlertAction *action)
                                            {
-                                               self->_slamState.showingMemoryWarning = false;
-                                               [self enterViewingState];
-                                           }];
-
-
+                    self->_slamState.showingMemoryWarning = false;
+                    [self enterViewingState];
+                }];
+                
+                
                 [alertCtrl addAction:okAction];
-
+                
                 // show the alert
                 [self presentViewController:alertCtrl animated:YES completion:nil];
             }
-
+            
             break;
         }
         default:
@@ -1009,8 +1057,8 @@
 }
 
 - (IBAction)gotoBackButtonArion:(UIButton *)sender {
-     [self clearCash];
-        [self.navigationController popViewControllerAnimated:YES];
+    [self clearCash];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

@@ -33,13 +33,12 @@
           // 允许用户更改网页的设置
           Configuration.userContentController = UserContentController;
           
-        _webView = [[WKWebView alloc] initWithFrame:CGRectMake(47, 0, KFrameWidth-(47+35), KFrameHeight - 64-82-50) configuration:Configuration];
+        _webView = [[WKWebView alloc] initWithFrame:CGRectMake(47, 0, KFrameWidth-(47+35), 20) configuration:Configuration];
          
          _webView.backgroundColor = [UIColor whiteColor];
         _webView.scrollView.showsHorizontalScrollIndicator = NO;
         _webView.scrollView.showsVerticalScrollIndicator = NO;
-//        _webView.scrollView.scrollEnabled = NO;
-
+        _webView.scrollView.scrollEnabled = NO;
  
     }
     return _webView;

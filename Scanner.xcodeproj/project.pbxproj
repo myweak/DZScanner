@@ -231,6 +231,7 @@
 		0058904A24B32E09000459B5 /* RrUserDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0058904924B32E09000459B5 /* RrUserDataModel.m */; };
 		005F5C9F24C854C100B28E2D /* JassonSTLVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F5C9C24C854C100B28E2D /* JassonSTLVC.m */; };
 		005F5CA024C854C100B28E2D /* JassonSTLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F5C9D24C854C100B28E2D /* JassonSTLView.m */; };
+		0095341224EBB057003BBD83 /* AppModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0095341124EBB057003BBD83 /* AppModel.m */; };
 		0096180C24D3CA2000999E61 /* RrMineOrderListDetailEdittingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0096180B24D3CA2000999E61 /* RrMineOrderListDetailEdittingVC.m */; };
 		0096181024D409F500999E61 /* TZNotNetworkView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0096180E24D409F500999E61 /* TZNotNetworkView.m */; };
 		0096181124D409F500999E61 /* TZNotNetworkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0096180F24D409F500999E61 /* TZNotNetworkView.xib */; };
@@ -676,6 +677,8 @@
 		005F5C9D24C854C100B28E2D /* JassonSTLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JassonSTLView.m; sourceTree = "<group>"; };
 		005F5C9E24C854C100B28E2D /* JassonSTLVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JassonSTLVC.h; sourceTree = "<group>"; };
 		006F0A1F24E547160012E2A8 /* RrStucture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RrStucture.h; sourceTree = "<group>"; };
+		0095341024EBB057003BBD83 /* AppModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppModel.h; sourceTree = "<group>"; };
+		0095341124EBB057003BBD83 /* AppModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppModel.m; sourceTree = "<group>"; };
 		0096180A24D3CA2000999E61 /* RrMineOrderListDetailEdittingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RrMineOrderListDetailEdittingVC.h; sourceTree = "<group>"; };
 		0096180B24D3CA2000999E61 /* RrMineOrderListDetailEdittingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RrMineOrderListDetailEdittingVC.m; sourceTree = "<group>"; };
 		0096180D24D409F500999E61 /* TZNotNetworkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZNotNetworkView.h; sourceTree = "<group>"; };
@@ -723,6 +726,7 @@
 		00BDC7C624C1962F00160CDF /* RrOrderDetailUserInfoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RrOrderDetailUserInfoCell.h; sourceTree = "<group>"; };
 		00BDC7C724C1962F00160CDF /* RrOrderDetailUserInfoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RrOrderDetailUserInfoCell.m; sourceTree = "<group>"; };
 		00BDC7C824C1962F00160CDF /* RrOrderDetailUserInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RrOrderDetailUserInfoCell.xib; sourceTree = "<group>"; };
+		00D8867F24EE24A800D9DD4B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		00E9FB4924DBD4C500CDD798 /* RrProductSearchVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RrProductSearchVC.h; sourceTree = "<group>"; };
 		00E9FB4A24DBD4C500CDD798 /* RrProductSearchVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RrProductSearchVC.m; sourceTree = "<group>"; };
 		00E9FB4D24DBDEC800CDD798 /* RrScanFileSearchVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RrScanFileSearchVC.h; sourceTree = "<group>"; };
@@ -1430,6 +1434,7 @@
 		0058904324B31CB2000459B5 /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				0095340F24EBB01E003BBD83 /* Model */,
 				00BB6E4224C82D5D00B9ACA8 /* FMBD */,
 				00010DA624BDBA1E00E7AB40 /* Object */,
 				0013A2DF24B59A9C003DC01C /* AssetsPickerTool */,
@@ -1481,6 +1486,75 @@
 				005F5C9C24C854C100B28E2D /* JassonSTLVC.m */,
 			);
 			path = JassonSTLView;
+			sourceTree = "<group>";
+		};
+		00742ED124EF69C300751803 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				00742ED524EF6A8A00751803 /* Code（验证码校验） */,
+				00742ED424EF6A4000751803 /* UserInfo（用户信息） */,
+				00742ED324EF6A0000751803 /* LoginOrRegist（登陆注册） */,
+				00742ED224EF69CC00751803 /* ChangeWord（修改密码） */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		00742ED224EF69CC00751803 /* ChangeWord（修改密码） */ = {
+			isa = PBXGroup;
+			children = (
+				001CB24F24B6B7680024A7E0 /* FindPassWordVC.h */,
+				001CB25024B6B7680024A7E0 /* FindPassWordVC.m */,
+				001CB25124B6B7680024A7E0 /* FindPassWordVC.xib */,
+				00F5F6C924C02FFD0029FF30 /* RrChangeWordVC.h */,
+				00F5F6CA24C02FFD0029FF30 /* RrChangeWordVC.m */,
+				00F5F6CB24C02FFD0029FF30 /* RrChangeWordVC.xib */,
+			);
+			path = "ChangeWord（修改密码）";
+			sourceTree = "<group>";
+		};
+		00742ED324EF6A0000751803 /* LoginOrRegist（登陆注册） */ = {
+			isa = PBXGroup;
+			children = (
+				6A6A31CD24A32091001D6D93 /* RegistVC.h */,
+				6A6A31CE24A32091001D6D93 /* RegistVC.m */,
+				6A6A31CF24A32091001D6D93 /* registVC.xib */,
+				6A6A31D224A320A6001D6D93 /* LoginVC.h */,
+				6A6A31D324A320A6001D6D93 /* LoginVC.m */,
+				6A6A31D424A320A6001D6D93 /* LoginVC.xib */,
+			);
+			path = "LoginOrRegist（登陆注册）";
+			sourceTree = "<group>";
+		};
+		00742ED424EF6A4000751803 /* UserInfo（用户信息） */ = {
+			isa = PBXGroup;
+			children = (
+				00F4F32624B74D770048D955 /* CheckUserInfoVC.h */,
+				00F4F32724B74D770048D955 /* CheckUserInfoVC.m */,
+				0013A2DC24B59003003DC01C /* PostUserInfoVC.h */,
+				0013A2DD24B59003003DC01C /* PostUserInfoVC.m */,
+				004D5AF524BC3C39000CAA2D /* RrEditeTitleVc.h */,
+				004D5AF624BC3C39000CAA2D /* RrEditeTitleVc.m */,
+				004D5AF724BC3C39000CAA2D /* RrEditeTitleVc.xib */,
+			);
+			path = "UserInfo（用户信息）";
+			sourceTree = "<group>";
+		};
+		00742ED524EF6A8A00751803 /* Code（验证码校验） */ = {
+			isa = PBXGroup;
+			children = (
+				0058904024B31744000459B5 /* RrCodeValidationVC.h */,
+				0058904124B31744000459B5 /* RrCodeValidationVC.m */,
+			);
+			path = "Code（验证码校验）";
+			sourceTree = "<group>";
+		};
+		0095340F24EBB01E003BBD83 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0095341024EBB057003BBD83 /* AppModel.h */,
+				0095341124EBB057003BBD83 /* AppModel.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		00B6D05B24C7E8460071A28B /* ObjToStl */ = {
@@ -2013,29 +2087,9 @@
 		6A6A31C924A31FE5001D6D93 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				00742ED124EF69C300751803 /* ViewController */,
 				0054F18224DA6377007C1F76 /* AgreementView（用户协议弹框） */,
 				6A705A2624A86A3800624712 /* Model */,
-				6A6A31CD24A32091001D6D93 /* RegistVC.h */,
-				6A6A31CE24A32091001D6D93 /* RegistVC.m */,
-				6A6A31CF24A32091001D6D93 /* registVC.xib */,
-				6A6A31D224A320A6001D6D93 /* LoginVC.h */,
-				6A6A31D324A320A6001D6D93 /* LoginVC.m */,
-				6A6A31D424A320A6001D6D93 /* LoginVC.xib */,
-				0058904024B31744000459B5 /* RrCodeValidationVC.h */,
-				0058904124B31744000459B5 /* RrCodeValidationVC.m */,
-				0013A2DC24B59003003DC01C /* PostUserInfoVC.h */,
-				0013A2DD24B59003003DC01C /* PostUserInfoVC.m */,
-				001CB24F24B6B7680024A7E0 /* FindPassWordVC.h */,
-				001CB25024B6B7680024A7E0 /* FindPassWordVC.m */,
-				001CB25124B6B7680024A7E0 /* FindPassWordVC.xib */,
-				00F4F32624B74D770048D955 /* CheckUserInfoVC.h */,
-				00F4F32724B74D770048D955 /* CheckUserInfoVC.m */,
-				004D5AF524BC3C39000CAA2D /* RrEditeTitleVc.h */,
-				004D5AF624BC3C39000CAA2D /* RrEditeTitleVc.m */,
-				004D5AF724BC3C39000CAA2D /* RrEditeTitleVc.xib */,
-				00F5F6C924C02FFD0029FF30 /* RrChangeWordVC.h */,
-				00F5F6CA24C02FFD0029FF30 /* RrChangeWordVC.m */,
-				00F5F6CB24C02FFD0029FF30 /* RrChangeWordVC.xib */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -2238,6 +2292,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 6A6A314924A3165A001D6D93;
 			productRefGroup = 6A6A315324A3165A001D6D93 /* Products */;
@@ -2475,6 +2530,7 @@
 				0058904724B31CE9000459B5 /* GetCodeButton.m in Sources */,
 				002006CF24C68A29006A3CFB /* ViewController+SLAM.mm in Sources */,
 				6A2F466A24AB332B0039D4EF /* MZKeyboardDetectManager.m in Sources */,
+				0095341224EBB057003BBD83 /* AppModel.m in Sources */,
 				00BDC7C024C1820B00160CDF /* RrPostOrderListDetailVC.m in Sources */,
 				0013A3D924B59AFC003DC01C /* NSNumberFormatter+CTAssetsPickerController.m in Sources */,
 				005F5C9F24C854C100B28E2D /* JassonSTLVC.m in Sources */,
@@ -2666,6 +2722,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				6A6A316724A3165C001D6D93 /* Base */,
+				00D8867F24EE24A800D9DD4B /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -2677,6 +2734,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2735,6 +2793,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2790,8 +2849,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Scanner/糖橙辅具.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 85JCQ48ZNN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2820,6 +2880,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rrd.dzpt;
 				PRODUCT_NAME = "糖橙定制";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2835,7 +2896,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Scanner/糖橙辅具.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 85JCQ48ZNN;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

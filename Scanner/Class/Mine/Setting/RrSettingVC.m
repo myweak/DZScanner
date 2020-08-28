@@ -106,7 +106,8 @@
         cell.centerLabel.textColor = [UIColor c_redColor];
         [cell.contenViewBg bezierPathWithRoundingCorners:UIRectCornerAllCorners cornerRadius:7.0f];
     }else if ([title isEqualToString:SRrDBaseUrl]) {
-        cell.rightLabel.text = [RrUserDefaults getStrValueInUDWithKey:SRrDBaseUrl];
+        NSString *url = [RrUserDefaults getStrValueInUDWithKey:SRrDBaseUrl];
+        cell.rightLabel.text = checkStrEmty(url) ? RrDBaseUrl:url;
         cell.contenViewBg.backgroundColor = [UIColor yellowColor];
         [cell.contenViewBg addCornerRadius:7.0f];
     }

@@ -133,14 +133,14 @@ float inline keepInRange(float value, float minValue, float maxValue)
 
 struct AppStatus
 {
-    NSString* const pleaseConnectSensorMessage = @"请连接Structure Sensor.";
-    NSString* const pleaseChargeSensorMessage = @"请给Structure Sensor充电.";
+    NSString* const pleaseConnectSensorMessage = @"请连接结构传感器.";
+    NSString* const pleaseChargeSensorMessage = @"请给结构传感器充电.";
     
     NSString* const needColorCameraAccessMessage = @"该app需要获得相机权限.\n请到设置->隐私->相机处进行设置";
     NSString* const needCalibratedColorCameraMessage = @"This app requires an iOS device with a supported bracket.";
     
     NSString* const finalizingMeshMessage = @"Finalizing model...";
-    NSString* const sensorIsWakingUpMessage = @"Sensor 正在初始化中. 请等待...";
+    NSString* const sensorIsWakingUpMessage = @"传感器 正在初始化中. 请等待...";
     // Whether there is currently a message to show.
     bool needsDisplayOfStatusMessage = false;
 
@@ -267,6 +267,13 @@ struct DisplayData
 @property (weak, nonatomic) IBOutlet UIButton *resetButton;
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
 @property (weak, nonatomic) IBOutlet UILabel *trackingLostLabel;
+@property (weak, nonatomic) IBOutlet UIView *firmwareUpdateView;
+//@property (weak, nonatomic) IBOutlet UIButton *updateNowButton;
+//@property (weak, nonatomic) IBOutlet UILabel *updateNowTitleLabel;
+//购买传感器 提示View
+@property (weak, nonatomic) IBOutlet UIView *buyView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *buyView_top;
+
 
 - (IBAction)scanButtonPressed:(id)sender;
 - (IBAction)resetButtonPressed:(id)sender;
