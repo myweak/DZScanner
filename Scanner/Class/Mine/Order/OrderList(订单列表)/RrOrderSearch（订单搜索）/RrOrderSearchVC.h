@@ -7,10 +7,12 @@
 //
 
 #import "RrSearchViewController.h"
+#import "RrMineOrderListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RrOrderSearchVC : RrSearchViewController
+@property (nonatomic, copy) void(^showPayNotifiBlock)(RrMineOrderListModel *);//付款提醒
 
 @end
 

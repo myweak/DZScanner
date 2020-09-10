@@ -6,7 +6,7 @@
 //  Copyright © 2020 rrdkf. All rights reserved.
 //
 
-#define KUserInfo    @"用户信息"
+#define KUserInfo    @"患者信息"
 #define KData        @"测量数据"
 #define KScan        @"3D扫描"
 #define KPay         @"支付凭证"
@@ -212,7 +212,7 @@
     if (!_addView_pay) {
         _addView_pay = [[RrAddImageView alloc] initWithFrame:CGRectMake(17, 0, KFrameWidth-17*2, iPH(159)+70)];
         _addView_pay.titleLabel.text = KPay;
-//        _addView_pay.addPView.isCanEdite = YES;
+        //        _addView_pay.addPView.isCanEdite = YES;
         _addView_pay.addPView.maxPhotoNum = 3;
         @weakify(self)
         _addView_pay.complemntBlock = ^(RrAddImageView *photoView) {
@@ -335,24 +335,24 @@
             return 156;
         }else{
             if (!self.model) {
-                        return 185;
-                    }
+                return iPH(185);
+            }
             switch ([self.model.orderStatus intValue]) {
                 case 1:// 待完善
                 case 6://制作完成
-                    return 185;
+                    return iPH(185);
                 case 3://待付款
                 {
                     if ([self.model.payType intValue] == 1) {
-                        return 185;
+                        return iPH(185);
                     }
-                    return 110;
+                    return iPH(110);
                 }
             }
-            return 110;
+            return iPH(110);
             
         }
-        return 185;
+        return iPH(185);
     }else if ([title isEqualToString:KOrderConten]) {
         return self.bottonLabelView.height;
     }
@@ -449,6 +449,8 @@
             return cell;
         }else if(indexPath.row == 1){//收货地址
             RrMineOrderDetailAdressCell *cell = [tableView dequeueReusableCellWithIdentifier:KRrMineOrderDetailAdressCell_ID forIndexPath:indexPath];
+            __weak RrMineOrderDetailAdressCell *weakCell = cell;
+            
             cell.model = self.model;
             cell.backBlock = ^(BOOL onTapLeft, BOOL onTapRight) {
                 @strongify(self)
@@ -472,6 +474,7 @@
                         editVc.model = self.model;
                         [self.navigationController pushViewController:editVc animated:YES];
                     }else if ([self.model.orderStatus intValue] == 3) {
+                        [weakCell startTime];
                         [self showPayNotifi];
                     }else if ([self.model.orderStatus intValue] == 6) {  //制作完成6
                         [self AlertWithTitle:@"温馨提示" message:@"是否确认收货" andOthers:@[@"取消",@"确认"] animated:YES action:^(NSInteger index) {
@@ -489,7 +492,7 @@
         }
         
     }else if ([title isEqualToString:KOrderConten]) {
-    
+        
         MZCommonCell *cell = [MZCommonCell blankClearCell];
         [cell.contentView addSubview:self.bottonLabelView];
         return cell;
@@ -602,7 +605,7 @@
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     [[RRNetWorkingManager sharedSessionManager] putOrderPayNotifi:@{@"outTradeNo":self.model.outTradeNo} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         if (!error) {
-            showMessage(@"已发送付款提醒");
+            showMessage(@"发送成功");
         }else{
             showMessage(responseModel.msg);
         }
@@ -648,7 +651,7 @@
     self.payTextField.text = [NSString stringWithFormat:@"¥%@",self.model.AactualReceipts];
     self.payTextField.textColor = [UIColor c_btn_Bg_Color];
     self.payTextField.layer.borderColor = [UIColor clearColor].CGColor;
-
+    
     
     self.addView_data.addPView.imageUrl = [self.model.attachment componentsSeparatedByString:@","];
     self.addView_pay.addPView.imageUrl = [self.model.payImg componentsSeparatedByString:@","];
@@ -691,12 +694,11 @@
     //------------------------ 待完善  end ----------------------------------
     
     
-
+    
     
     //---------------------- 待支付 3-------------------------------
     if ([self.model.orderStatus intValue] == 3) { //用户提交订单时是线上支付--》待支付   // 可修改支付方式
         [self addRightNavigationBtn];
-        self.rightNaviBtn.hidden = NO;
         [self.rightNaviBtn setTitle:@"提交" forState:UIControlStateNormal];
         if (![self.dataArr containsObject:KPayType]) {
             NSInteger insert = [self.dataArr indexOfObject:KOrderConten];
@@ -718,7 +720,7 @@
     }
     
     // 根据支付类型 更新 ui
-       [self updatePayTypeDataUI];
+    [self updatePayTypeDataUI];
     
     //----------------------------------------------------------
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -730,13 +732,13 @@
         [self.addView_scan.addPView updateAddPhotoView];
         [self.addView_pay.addPView updateAddPhotoView];
     });
-
+    
 }
 
 //订单信息x
 - (void)setOrerMesaageUI{
     
-    NSString *title1 = [NSString stringWithFormat:@"%@%@",@"发票信息：",self.model.partnerName];
+    NSString *title1 = [NSString stringWithFormat:@"%@%@",@"发票信息：",@""];
     NSString *title2 = [NSString stringWithFormat:@"%@%@",@"订单编号：",self.model.outTradeNo];
     NSString *title3 = [NSString stringWithFormat:@"%@%@",@"创建时间：",[self.model.createTime dateStringFromTimeYMDHMS]];
     
@@ -749,7 +751,7 @@
     NSString *title9 = [NSString stringWithFormat:@"%@%@",@"备注：",self.model.remark];
     
     NSString *title10 = [NSString stringWithFormat:@"%@%@",@"收货时间：",[self.model.completeTime dateStringFromTimeYMDHMS]];
-
+    
     
     NSMutableArray *itemArr = [NSMutableArray array];
     if (!checkStrEmty(self.model.partnerName)) {
@@ -780,8 +782,8 @@
         [itemArr addObject:title9];
     }
     if (!checkStrEmty(self.model.completeTime)) {
-           [itemArr addObject:title10];
-       }
+        [itemArr addObject:title10];
+    }
     self.bottonLabelView.itemLabelArr = itemArr;
     
 }
@@ -789,12 +791,12 @@
 // 根据支付类型 更新 ui
 - (void)updatePayTypeDataUI{
     if ([self.model.payType intValue] == 1) { //线上支付
-//        self.rightNaviBtn.hidden = YES;
+        self.rightNaviBtn.hidden = YES;
         if ([self.dataArr containsObject:KPay]) {
             [self.dataArr removeObject:KPay];
         }
     }else{//线下支付
-//        self.rightNaviBtn.hidden = NO;
+        self.rightNaviBtn.hidden = NO;
         if (![self.dataArr containsObject:KPay]) {
             NSInteger insert = [self.dataArr indexOfObject:KOrderConten];
             [self.dataArr insertObject:KPay atIndex:insert];

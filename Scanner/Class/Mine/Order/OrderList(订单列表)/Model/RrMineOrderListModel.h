@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 // ----
 @property (nonatomic, copy)   NSString *orderStatus_Str;//订单状态 str
 
+/// 进入倒计时
+@property (nonatomic, assign) BOOL timePut;
 @end
 
 /**

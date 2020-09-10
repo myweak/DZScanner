@@ -20,6 +20,8 @@
 #import "RrOfflinePayTypeCell.h" // 线下支付
 #import "RrAddImageView.h"
 #import "RrMineAddressMdoel.h" // 收货地址model
+#import "RrMineEditeAddressVC.h"
+
 @interface RrPostOrderListDetailVC ()<UITableViewDelegate,UITableViewDataSource,RrMineAddressVCDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)  NSArray *listArr;
@@ -45,7 +47,7 @@
 @implementation RrPostOrderListDetailVC
 
 - (void)dealloc{
-
+    
     self.addPView.manger = nil;
     self.addPView = nil;
     self.addPostCerView.manger = nil;
@@ -59,19 +61,42 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [MobClick beginLogPageView:@"商品定制下单页"]; //("Pagename"为页面名称，可自定义)
-
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [MobClick endLogPageView:@"商品定制下单页"];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (!aUser.userAddressMdoel) {
+        self.postModel.doctorAddr = @"";
+        self.postModel.addrId = @"";
+        @weakify(self)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
+            [self.tableView reloadData];
+        });
+    }else{
+        RrMineAddressMdoel *model = aUser.userAddressMdoel;
+        NSString *addreStr = [NSString stringWithFormat:@"%@ %@ %@ %@",model.provinceDesc,model.cityDesc,model.areaDesc,model.addrDetail];
+        self.postModel.doctorAddr = addreStr;
+        self.postModel.addrId = model.ID;
+        @weakify(self)
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @strongify(self)
+            [self.tableView reloadData];
+        });
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self getAdressListUrl];
-
+    [self getAdressListUrlWithCacheBlock:nil defaultAddr:YES];
+    
     [self addTableView];
     
     //初始化数据
@@ -134,7 +159,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         @strongify(self)
         [self.tableView reloadData];
-
+        
     });
 }
 
@@ -191,9 +216,24 @@
         [cell.addressViewBg handleTap:^(CGPoint loc, UIGestureRecognizer *tapGesture) {
             @strongify(self);
             [self.view endEditing:YES];
-            RrMineAddressVC *addreVc = [RrMineAddressVC new];
-            addreVc.delegate = self;
-            [self.navigationController pushViewController:addreVc animated:YES];
+            [self getAdressListUrlWithCacheBlock:^(NSArray *arr) {
+                @strongify(self);
+                if (arr.count>0) {
+                    RrMineAddressVC *addreVc = [RrMineAddressVC new];
+                    addreVc.delegate = self;
+                    [self.navigationController pushViewController:addreVc animated:YES];
+                }else{
+                    RrMineEditeAddressVC *editeVc =[RrMineEditeAddressVC new];
+                    editeVc.type = RrMineEditeAddressType_add;
+                    editeVc.title = @"添加新地址";
+                    editeVc.backSaveSucceedBlock = ^{
+                        @strongify(self);
+                        [self getAdressListUrlWithCacheBlock:nil defaultAddr:NO];
+                    };
+                    [self.navigationController pushViewController:editeVc animated:YES];
+                }
+            } defaultAddr:NO];
+          
         }];
         return cell;
     }else if (indexPath.section == 1){
@@ -286,12 +326,12 @@
 //上传测量数据
 - (UIView *)addPhoneView{
     if (!_addPhoneView) {
-        _addPhoneView = [[UIView alloc] initWithFrame:CGRectMake(17, 0, KFrameWidth-34, 186)];
+        _addPhoneView = [[UIView alloc] initWithFrame:CGRectMake(17, 0, KFrameWidth-34, iPH(196)-45)];
         _addPhoneView.backgroundColor = [UIColor whiteColor];
         [_addPhoneView addCornerRadius:7.0f];
         UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 17, 300, 21)];
         titleLabel.text = @"上传测量数据";
-        titleLabel.font = [UIFont systemFontOfSize:20];
+        titleLabel.font = KFont20 ;
         titleLabel.textColor = [UIColor c_mianblackColor];
         [_addPhoneView addSubview:titleLabel];
         @weakify(self)
@@ -318,7 +358,7 @@
 //上传3D扫描
 - (RrAddImageView *)addView_scan{
     if (!_addView_scan) {
-        _addView_scan = [[RrAddImageView alloc] initWithFrame:CGRectMake(17, 0, KFrameWidth-17*2, 196)];
+        _addView_scan = [[RrAddImageView alloc] initWithFrame:CGRectMake(17, 0, KFrameWidth-17*2, iPH(196))];
         _addView_scan.titleLabel.text = @"上传3D扫描";
         _addView_scan.addPView.isCanEdite = YES;
         @weakify(self)
@@ -328,7 +368,7 @@
             [self.tableView reloadData];
         };
         _addView_scan.addPView.photoW = iPH(85);
-
+        
         //1.点击添查看
         _addView_scan.addPView.addPhotoViewSelectedBlock = ^(NSInteger index) {
             @strongify(self)
@@ -387,7 +427,7 @@
 
 // 1. 上传订单数据 判断
 - (void)postOrderDetail{
-
+    
     
     if (checkStringIsEmty(self.postModel.patientName)) {
         showMessage(@"请输入姓名");
@@ -401,10 +441,10 @@
     }
     
     if([self.postModel.payType intValue] == 2){ //2线下支付
-       if ([self.addPostCerView.manger.currentAssets count] == 0){
-           showMessage(@"请选择上传支付凭证");
-           return;
-       }else if(checkStringIsEmty(self.postModel.AactualReceipts) || [self.postModel.AactualReceipts floatValue] <=0){
+        if ([self.addPostCerView.manger.currentAssets count] == 0){
+            showMessage(@"请选择上传支付凭证");
+            return;
+        }else if(checkStringIsEmty(self.postModel.AactualReceipts) || [self.postModel.AactualReceipts floatValue] <=0){
             showTopMessage(@"请填写线下支付金额");
             return;
         }
@@ -414,10 +454,10 @@
         showMessage(@"请上传您的测量数据");
         return;
     }
-//    else if(self.scanArr.count == 0){
-//        showMessage(@"请上传您3D扫描");
-//        return;
-//    }
+    //    else if(self.scanArr.count == 0){
+    //        showMessage(@"请上传您3D扫描");
+    //        return;
+    //    }
     NSMutableArray *scanMutArr = [NSMutableArray array];
     [self.scanModelArr enumerateObjectsUsingBlock:^(ScanFileModel *model, NSUInteger idx, BOOL * _Nonnull stop) {
         [scanMutArr addObject:model.preview];
@@ -433,10 +473,10 @@
 // 2. 上传图片数据到 七牛 update_next:yes 表示有上传失败的自动再次 上传一次
 - (void)postQiNiuAll:(BOOL) update_next{
     
- [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
-
-  static  NSMutableArray *mutArrUrl1;
-  static  NSMutableArray *mutArrUrl2 ;
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
+    
+    static  NSMutableArray *mutArrUrl1;
+    static  NSMutableArray *mutArrUrl2 ;
     
     // 创建队列组，可以使多个网络请求异步执行，执行完之后再进行操作
     dispatch_group_t group = dispatch_group_create();
@@ -471,7 +511,7 @@
         // 2.七🐂 上传测量数据 image ----------------------------------
         dispatch_semaphore_t semaphore2 = dispatch_semaphore_create(0);
         if (!self.imageUrlPass_data) {
-             mutArrUrl2 = [NSMutableArray array];
+            mutArrUrl2 = [NSMutableArray array];
             [self.addPView.manger uploadCurrentAssetsWithCompletion:^(BOOL succeed, id imageDatas, id videoDatas) {
                 if (succeed) {
                     if (imageDatas) {
@@ -492,7 +532,7 @@
         
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(semaphore2, DISPATCH_TIME_FOREVER);
-//        dispatch_semaphore_wait(semaphore3, DISPATCH_TIME_FOREVER);
+        //        dispatch_semaphore_wait(semaphore3, DISPATCH_TIME_FOREVER);
         
         
     });
@@ -507,14 +547,14 @@
             self.imageUrlPass_pay = YES;
             NSString *certimg1 = [mutArrUrl1 componentsJoinedByString:@","];
             self.postModel.payImg = certimg1;
-
+            
         }
         
         if (mutArrUrl2.count == [self.addPView.manger.currentAssets count]) {
             // 返回主线程进行界面上的修改
             self.imageUrlPass_data = YES;
             NSString *certimg2 = [mutArrUrl2 componentsJoinedByString:@","];
-             self.postModel.attachment = certimg2;
+            self.postModel.attachment = certimg2;
         }
         
         
@@ -526,7 +566,7 @@
         
         if (! self.imageUrlPass_pay || ! self.imageUrlPass_data ) {
             if (update_next) {
-                 [self postQiNiuAll:NO];
+                [self postQiNiuAll:NO];
             }else{
                 if (mutArrUrl1.count != [self.addPostCerView.manger.currentAssets count]) {
                     showMessage(@"上传支付凭证失败");
@@ -577,19 +617,33 @@
 
 
 
-//获取默认地址
-- (void)getAdressListUrl{
-//    if (!checkStrEmty(self.postModel.doctorAddr)) {
-//        return;
-//    }
+//获取默认地址；( block 仅限用于检查用户地址列表是否有数据) isDefaultAddr:可以取非默认地址，
+- (void)getAdressListUrlWithCacheBlock:(void(^)(NSArray *arr)) block defaultAddr:(BOOL)isDefaultAddr{
+
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeNone];
     [[RRNetWorkingManager sharedSessionManager] getAddressList:@{KisAddEGOCache_Key:KisAddEGOCache_value} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
-        [SVProgressHUD dismiss];
         if (!error) {
             NSArray *arr =  responseModel.list;
+
+            if (block) {
+                [SVProgressHUD dismiss];
+                if (responseModel.isCashEQO) {
+                    !block ?:block(arr);
+                    return;
+                }
+                return;
+            }
+            
+            if (responseModel.isCashEQO) {
+                return;
+            }
+            // 不能用缓存数据，防止用户 删除地址，
             if ([arr count] >0) {
                 RrMineAddressMdoel *model = [arr firstObject];
-                if ([model.defaultAddr intValue] == 1) {
+                if ([model.defaultAddr intValue] == 1 || !isDefaultAddr) {
+                    if (isDefaultAddr) {
+                        aUser.userAddressMdoel = model;
+                    }
                     NSString *addreStr = [NSString stringWithFormat:@"%@ %@ %@ %@",model.provinceDesc,model.cityDesc,model.areaDesc,model.addrDetail];
                     self.postModel.doctorAddr = addreStr;
                     self.postModel.addrId = model.ID;
@@ -598,12 +652,18 @@
                         @strongify(self)
                         [self.tableView reloadData];
                     });
+                }else{
+                     aUser.userAddressMdoel = nil;
                 }
+            }else{
+                 aUser.userAddressMdoel = nil;
             }
             
-
+            [SVProgressHUD dismiss];
         }else{
+            !block ?:block(@[]);
             showTopMessage(responseModel.msg);
+            [SVProgressHUD dismiss];
         }
     }, [RrMineAddressMdoel class])];
 }

@@ -68,7 +68,7 @@
     if (!_titleLabel) {
         UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 17, 300, 21)];
         titleLabel.text = @"上传测量数据";
-        titleLabel.font = [UIFont systemFontOfSize:20];
+        titleLabel.font = KFont20;
         titleLabel.textColor = [UIColor c_mianblackColor];
         _titleLabel = titleLabel;
     }

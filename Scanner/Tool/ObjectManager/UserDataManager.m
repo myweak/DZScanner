@@ -42,6 +42,8 @@
     }
     LoginVC *log = [LoginVC new];
     [log addPsuhVCAnimationFromTop];
+    
+    [UserDataManager deleteJPUSHServiceAlias];
 
   if ([KWindow.rootViewController isKindOfClass:[MainTabBarVC class]]) {//已进入主页面
       [vc setHidenLeftTaBar:YES];
@@ -61,12 +63,28 @@
         NSLog(@"打印设置别名iResCode=%ld, iAlias=%@, seq=%ld", iResCode, iAlias, seq);
         if (iResCode == 0) {
             NSLog(@"添加别名成功");
-            [[UserDataManager sharedManager] getJPushDeviceIDUrlNext:NO];
+            if (isNext) {
+                [[UserDataManager sharedManager] getJPushDeviceIDUrlNext:NO];
+            }
         }else{
             [UserDataManager registJPUSHServiceAliasNext:NO];
         }
     } seq: 2020];
     
+   
+    
+}
++ (void)deleteJPUSHServiceAlias{
+    [UserDataManager deleteJPUSHServiceAliasNext:YES];
+}
++ (void)deleteJPUSHServiceAliasNext:(BOOL)isNext{
+    　[JPUSHService deleteAlias:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
+        if (iResCode != 0) {
+            if (isNext) {
+                [UserDataManager deleteJPUSHServiceAliasNext:NO];
+            }
+        }
+      } seq:2020];
 }
 
 - (void)getJPushDeviceIDUrlNext:(BOOL)isNext{

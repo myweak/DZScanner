@@ -10,7 +10,7 @@
 #import "RrMineEditeAddressVC.h" // 编辑地址
 #import "RrMineAddressCell.h"
 #import "RrMineAddressMdoel.h"
-@interface RrMineAddressVC ()<UITableViewDelegate,UITableViewDataSource>
+@interface RrMineAddressVC ()<UITableViewDelegate,UITableViewDataSource,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataArr;
@@ -24,6 +24,8 @@
     @weakify(self)
     self.title = @"收货地址";
     [self.view addSubview:self.tableView];
+    self.tableView.emptyDataSetSource = self;
+    self.tableView.emptyDataSetDelegate = self;
     
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         @strongify(self);
@@ -32,7 +34,7 @@
     }];
     
     [self.tableView.mj_header beginRefreshing];
-
+    
     
     [self addNavigationButtonRight:@"添加新地址" RightActionBlock:^{
         @strongify(self);
@@ -40,7 +42,8 @@
         editeVc.type = RrMineEditeAddressType_add;
         editeVc.title = @"添加新地址";
         editeVc.backSaveSucceedBlock = ^{
-            [self getAdressListUrl];
+            @strongify(self);
+            [self.tableView.mj_header beginRefreshing];
         };
         [self.navigationController pushViewController:editeVc animated:YES];
     }];
@@ -124,14 +127,71 @@
     return cell;
     
 }
+
+
+// MARK: 空白页显示详细描述
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
+    NSString *text = @"您还没有收获地址，快去添加吧！";
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{
+        NSFontAttributeName:KFont19,
+        NSForegroundColorAttributeName:[UIColor c_GrayNotfiColor],
+        NSParagraphStyleAttributeName:paragraph
+    };
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+// 向上偏移量为表头视图高度/2
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView {
+    return -64;
+}
+
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
+{
+    NSString *text = @"去添加地址";
+       
+       NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+       paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+       paragraph.alignment = NSTextAlignmentCenter;
+       
+       NSDictionary *attributes = @{
+           NSFontAttributeName:KFont19,
+           NSForegroundColorAttributeName:[UIColor c_GreenColor],
+           NSParagraphStyleAttributeName:paragraph
+       };
+       
+       return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button
+{
+    @weakify(self)
+  RrMineEditeAddressVC *editeVc =[RrMineEditeAddressVC new];
+        editeVc.type = RrMineEditeAddressType_add;
+        editeVc.title = @"添加新地址";
+        editeVc.backSaveSucceedBlock = ^{
+            @strongify(self);
+            [self.tableView.mj_header beginRefreshing];
+        };
+        [self.navigationController pushViewController:editeVc animated:YES];
+}
+
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     RrMineAddressMdoel *model = self.dataArr[indexPath.section];
     if ([self.delegate respondsToSelector:@selector(rrMineAddressVCSelectAddress:AddreId:)]) {
+        aUser.userAddressMdoel = model;
         NSString *addreStr = [NSString stringWithFormat:@"%@ %@ %@ %@",model.provinceDesc,model.cityDesc,model.areaDesc,model.addrDetail];
         [self.delegate rrMineAddressVCSelectAddress:addreStr AddreId:model.ID];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
+
+
 
 
 #pragma mark UI
@@ -159,8 +219,10 @@
 #pragma mark - 网络 URL
 - (void)getAdressListUrl{
     //    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeNone];
+    @weakify(self)
     [[RRNetWorkingManager sharedSessionManager] getAddressList:@{KisAddEGOCache_Key:KisAddEGOCache_value} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         [SVProgressHUD dismiss];
+        @strongify(self)
         if (!error) {
             self.dataArr = [NSMutableArray arrayWithArray: responseModel.list];
             [self.tableView reloadData];
@@ -171,6 +233,16 @@
             [self.tableView.mj_header endRefreshing];
             [SVProgressHUD dismiss];
         }
+        [self.dataArr enumerateObjectsUsingBlock:^(RrMineAddressMdoel   *model, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([aUser.userAddressMdoel.ID isEqualToString:model.ID]) {
+                aUser.userAddressMdoel = model;
+                return;
+            };
+        }];
+        if (self.dataArr.count == 0) {
+            aUser.userAddressMdoel = nil;
+        }
+        
     }, [RrMineAddressMdoel class])];
 }
 
@@ -183,6 +255,9 @@
     [[RRNetWorkingManager sharedSessionManager] deleteAdressList:parameter result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         [SVProgressHUD dismiss];
         if (!error) {
+            if ([aUser.userAddressMdoel.ID isEqualToString:model.ID]) {
+                aUser.userAddressMdoel = nil;
+            };
             [self.dataArr removeObject:model];
             [self.tableView reloadData];
         }

@@ -94,6 +94,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
+    self.hidenLeftTaBar = YES;
     
     [self configUI];
     
@@ -208,6 +209,10 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if (self.phoneTextFild == textField) {
         NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        if ([self.accountNumLabel.text containsString:@"账号"]) {
+            return [text isLetterAndNum];
+        }
+        //手机号码
         if (text.length >11) {
             return NO;
         }
@@ -306,7 +311,7 @@ typedef NS_ENUM(NSInteger,LoginVCType) {
 
 // 账号登陆
 - (IBAction)accountBtnAction:(id)sender {
-    //    KWindow.rootViewController = self.tabarVc;
+
     self.accountNumLabel.text = @"账号:";
     self.codeView.hidden = YES;
     self.accountView.hidden = NO;

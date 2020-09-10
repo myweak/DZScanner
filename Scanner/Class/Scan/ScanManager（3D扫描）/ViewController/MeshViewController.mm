@@ -475,7 +475,6 @@ namespace
        BOOL resultcache = [fileManager fileExistsAtPath:cacheDirectory];
        if (!resultcache) {
            [fileManager createDirectoryAtPath:cacheDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-           return;
        }
     
     // 压缩文件的地址

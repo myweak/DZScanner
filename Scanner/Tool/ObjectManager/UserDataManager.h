@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(instancetype)sharedManager;
 - (void)psuhLoginVC;
 - (void)deleteAllUserInfo; // 清除用户数据
++ (void)deleteJPUSHServiceAlias; // 清除极光
 
 + (void)registJPUSHServiceAlias; // 极光 Alia 别名
 @end

@@ -113,10 +113,44 @@
                                             <action selector="rightBtnAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="67y-HV-AjS"/>
                                         </connections>
                                     </button>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OmQ-oN-3o7" userLabel="timeView">
+                                        <rect key="frame" x="571" y="0.0" width="154" height="44"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aRT-AO-XrR">
+                                                <rect key="frame" x="58" y="10" width="22" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <color key="textColor" red="0.6588235294" green="0.6588235294" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="S" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iM3-aK-yY4">
+                                                <rect key="frame" x="83" y="10" width="13" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <color key="textColor" red="0.6588235294" green="0.6588235294" blue="0.6588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="813-0Q-SPm"/>
+                                            <constraint firstAttribute="width" constant="154" id="SNa-sg-fo9"/>
+                                            <constraint firstItem="aRT-AO-XrR" firstAttribute="centerY" secondItem="OmQ-oN-3o7" secondAttribute="centerY" id="Xfb-LL-vG9"/>
+                                            <constraint firstItem="aRT-AO-XrR" firstAttribute="centerX" secondItem="OmQ-oN-3o7" secondAttribute="centerX" constant="-8" id="arR-4M-caJ"/>
+                                            <constraint firstItem="iM3-aK-yY4" firstAttribute="leading" secondItem="aRT-AO-XrR" secondAttribute="trailing" constant="3" id="g5T-Tb-wUZ"/>
+                                            <constraint firstItem="iM3-aK-yY4" firstAttribute="centerY" secondItem="aRT-AO-XrR" secondAttribute="centerY" id="hur-9J-Q3c"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="self.layer.cornerRadius">
+                                                <integer key="value" value="22"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="self.layer.masksToBounds" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="svT-Iw-UWU" firstAttribute="leading" secondItem="kXB-YD-o6d" secondAttribute="trailing" constant="34" id="MG9-mJ-BAS"/>
+                                    <constraint firstAttribute="trailing" secondItem="OmQ-oN-3o7" secondAttribute="trailing" constant="17" id="P6b-0f-mOW"/>
+                                    <constraint firstItem="OmQ-oN-3o7" firstAttribute="top" secondItem="JmF-5m-Ziq" secondAttribute="top" id="dNc-nr-uAc"/>
                                     <constraint firstItem="kXB-YD-o6d" firstAttribute="centerY" secondItem="svT-Iw-UWU" secondAttribute="centerY" id="h5Q-JF-kus"/>
                                     <constraint firstItem="svT-Iw-UWU" firstAttribute="top" secondItem="JmF-5m-Ziq" secondAttribute="top" id="m0A-L9-H2K"/>
                                     <constraint firstAttribute="trailing" secondItem="svT-Iw-UWU" secondAttribute="trailing" constant="17" id="zpd-IE-VH1"/>
@@ -154,11 +188,13 @@
                 <outlet property="nameLabel" destination="0Cx-6F-RAz" id="6yD-zb-5r6"/>
                 <outlet property="phoneLabel" destination="Ptn-Vn-ckc" id="1C3-3F-hwz"/>
                 <outlet property="rightBtn" destination="svT-Iw-UWU" id="fOJ-Y1-0PM"/>
+                <outlet property="timeLabel" destination="aRT-AO-XrR" id="RAq-V8-Meh"/>
+                <outlet property="timeView" destination="OmQ-oN-3o7" id="CcU-RI-95q"/>
             </connections>
             <point key="canvasLocation" x="460.86956521739131" y="112.83482142857142"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="mine_addre" width="40" height="40"/>
+        <image name="mine_addre" width="30" height="30"/>
     </resources>
 </document>

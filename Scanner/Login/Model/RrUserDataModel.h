@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "RrMineAddressMdoel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -46,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly,assign) BOOL isCompany; // 是否关联通过
 
 
-
+//xiao
 @property (nonatomic, strong) RrUserDataModel *userModel;// 当前model数据
-
+@property (nonatomic, strong) RrMineAddressMdoel *userAddressMdoel;// 用户选择下单地址model数据
 
 
 +(instancetype)sharedDataModel;
@@ -62,6 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 //获取个人信息
 - (void)updateUserDataInfoUrlWithBlock:(void (^)(BOOL success,RrUserDataModel *model, RrResponseModel *responseModel))block;
 + (void)updateUserInfo;
+
+// 是否登陆
++ (BOOL)isLogin;
 
 @end
 

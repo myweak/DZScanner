@@ -46,8 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateUserTypeUrlWithBlock:(void (^)(BOOL success,RrUserTypeModel *model))block;
 
-// 是否登陆
-+ (BOOL)isLogin;
+//+ (BOOL)isLogin;
 
 @end
 

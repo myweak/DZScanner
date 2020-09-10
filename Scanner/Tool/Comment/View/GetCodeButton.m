@@ -13,11 +13,13 @@
 
 @implementation GetCodeButton
 
+@synthesize countTime = _countTime;
 - (instancetype)init
 {
     self = [GetCodeButton buttonWithType:UIButtonTypeCustom];
     if (self) {
         self.isCounting = NO;
+        self.countTime = 60;
         self.buttonEnableColor = [UIColor yellowColor];
         self.buttonDisableColor = [UIColor colorWithWhite:1.f alpha:0.3f];
         self.disableTitleColor = [UIColor colorWithWhite:1.f alpha:0.3f];
@@ -29,12 +31,14 @@
         [self setTitle:@"重新发送" forState:UIControlStateNormal];
         [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self setTitleColor:self.disableTitleColor forState:UIControlStateDisabled];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel.font = KFont14;
         self.backgroundColor = [UIColor clearColor];
         self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     }
     return self;
 }
+
+
 
 - (void)setFrame:(CGRect)frame
 {
@@ -88,7 +92,7 @@
     _sometimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,0,0, queue);
     dispatch_source_set_timer(_sometimer, dispatch_walltime(NULL,0),1.0*NSEC_PER_SEC,0);// 每秒执行一次
     
-    NSTimeInterval seconds = 60;
+    NSTimeInterval seconds = self.countTime;
     WEAKSELF
     NSDate *endTime = [NSDate dateWithTimeIntervalSinceNow:seconds];// 最后期限
     dispatch_source_set_event_handler(_sometimer, ^{

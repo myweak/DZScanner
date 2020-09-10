@@ -23,10 +23,7 @@ pod 'RWPromiseKit', '0.2.0'
 pod 'EGOCache', '~> 2.2.0'
 pod 'YBImageBrowser'
 pod 'YBImageBrowser/Video'
-#pod 'YYImage'
 pod 'SDWebImage'
-#pod 'SDWebImage', '4.4.3'
-#pod 'SDWebImage/GIF'
 pod 'GZIP', '~> 1.3.0'  #压缩 data
 pod 'SSZipArchive' #zip解压
 pod 'FMDB'

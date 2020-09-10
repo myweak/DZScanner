@@ -7,7 +7,7 @@
 //
 
 #import "RrUserDataModel.h"
-
+#import "RrLonginModel.h"
 @implementation RrUserDataModel
 
 
@@ -90,6 +90,27 @@ Rr_CodingImplementation
     onceToken   = 0;
 }
 
+
+
++ (BOOL)isLogin{
+    
+    //status 工作人员 ( 0 基本信息待审核， 1 基本信息审核通过，2 基本信息被驳回 3 完整信息待审核  4完整信息审核通过， 5 完整信息被驳回 关联经销商待审核，7 关联经销商审核通过，8 关联经销商被驳回)
+    RrUserDataModel *model = [RrUserDataModel sharedDataModel].userModel;
+    CheckStatusType userStatus =  model.statusType;
+    if (userStatus == firstInfoSuccess ||
+        userStatus == infoCheckSuccee ||
+        userStatus == withInfoing ||
+        userStatus == withInfoSuccess ||
+        userStatus == withInfoUnSuccess) {
+        if (checkStrEmty([[RrLonginModel sharedDataModel].loginModel access_token])) {
+            return NO;
+        }
+        return YES;
+    }
+    return NO ;
+}
+
+
 //获取个人信息
 + (void)updateUserInfo{
     [[RrUserDataModel sharedDataModel] updateUserDataInfoUrlWithBlock:nil];
@@ -109,6 +130,9 @@ Rr_CodingImplementation
         }
     }, [RrUserDataModel class])];
 }
+
+
+
 
 
 @end

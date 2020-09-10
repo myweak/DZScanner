@@ -8,7 +8,6 @@
 
 #import "RrOrderSearchVC.h"
 #import "RrMineOrderListCell.h"
-#import "RrMineOrderListModel.h"
 #import "RrMineOrderListDetailVC.h" // 订单详情
 #import "RrMineOrderListDetailEdittingVC.h" //修改信息
 
@@ -61,6 +60,7 @@
     RrMineOrderListCell *cell = [tableView dequeueReusableCellWithIdentifier:KRrMineOrderListCell_ID forIndexPath:indexPath];
     RrMineOrderListModel *model = self.listArr[indexPath.section];
     cell.model = model;
+    __weak RrMineOrderListCell *weakCell = cell;
     cell.backBlock = ^(BOOL onTapLeft, BOOL onTapRight) {
         @strongify(self)
         
@@ -68,32 +68,32 @@
             
             NSString *content = [NSString stringWithFormat:@"%@  %@",model.express,model.trackingNumber];
             if ([model.orderStatus intValue] == 6) {  //制作完成6
-                [self AlertWithTitle:@"物流信息"  message:content andOthers:@[@"复制"] animated:YES action:^(NSInteger index) {
+                [self AlertWithTitle:@"物流信息" message:content andOthers:@[@"复制"] animated:YES action:^(NSInteger index) {
                     showMessage(@"复制成功!");
                     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                     pasteboard.string = model.trackingNumber;
                 }];
+            }else if ([model.orderStatus intValue] == 3) { //待付款
+                [self AlertWithTitle:@"温馨提示" message:@"是否取消该订单" andOthers:@[@"取消",@"确认"]  animated:YES action:^(NSInteger index) {
+                    if(index == 1){
+                        [self changeOrderStatusUrlWithModel:model SelectOrderStatus:@(0)];
+                    }
+                }];
+                
             }
             
-        }else{
+        }else if (onTapRight) {
             
             if ([model.orderStatus intValue] == 1) { ////审核被驳回 修改信息
                 RrMineOrderListDetailEdittingVC *editVc = [RrMineOrderListDetailEdittingVC new];
                 editVc.outTradeNo = model.outTradeNo;
                 [self.navigationController pushViewController:editVc animated:YES];
-            }
-            if ([model.orderStatus intValue] == 3) { //待付款
-                if (onTapLeft) {
-                    [self AlertWithTitle:@"温馨提示" message:@"是否取消该订单" andOthers:@[@"取消",@"确认"] animated:YES action:^(NSInteger index) {
-                        if(index == 1){
-                            [self changeOrderStatusUrlWithModel:model SelectOrderStatus:@(0)];
-                        }
-                    }];
-                }else{
-                    [self showPayNotifiWithModel:model];
-                }
+            }else if ([model.orderStatus intValue] == 3) { //待付款
+                [weakCell startTime];
+                [self showPayNotifiWithModel:model];
+                
             }else if ([model.orderStatus intValue] == 6) {  //制作完成6
-                [self AlertWithTitle:@"温馨提示" message:@"是否确认收货" andOthers:@[@"取消",@"确认"] animated:YES action:^(NSInteger index) {
+                [self AlertWithTitle:@"温馨提示" message:@"是否确认收货" andOthers:@[@"取消",@"确认"]  animated:YES action:^(NSInteger index) {
                     if(index == 1){
                         [self changeOrderStatusUrlWithModel:model SelectOrderStatus:@(7)];
                     }
@@ -123,8 +123,10 @@
     }
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeBlack];
     [[RRNetWorkingManager sharedSessionManager] putOrderPayNotifi:@{@"outTradeNo":model.outTradeNo} result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
+//        showMessage(@"已发送付款提醒");//产品要求
+
         if (!error) {
-            showMessage(@"已发送付款提醒");
+            showMessage(@"发送成功");
         }else{
             showMessage(responseModel.msg);
         }

@@ -21,7 +21,9 @@
 #import "CheckUserInfoVC.h"
 #import "AddPhotoView.h"
 #import "RrEditeTitleVc.h"  // 修改 Vc
-#import "LoginVC.h"
+#import "PostUserInfoVC.h"
+#import "RrCodeValidationVC.h"
+
 @interface CheckUserInfoVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataArr;
@@ -50,16 +52,20 @@
     [super viewDidLoad];
     
     if (self.type != CheckUserInfoVCType_push) {
-        NSMutableArray *navArr = [NSMutableArray array];
+        NSMutableArray *navArr = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
         for (UIViewController *VC in self.navigationController.viewControllers) {
             NSLog(@"-----%@",VC);
-            if ([VC isKindOfClass:[LoginVC class]]){
-                [navArr addObject:VC];
-            }else if([VC isKindOfClass:[CheckUserInfoVC class]]){
-                [navArr addObject:VC];
-            }else if([VC isKindOfClass:[MineViewController class]]){
-                [navArr addObject:VC];
+            if ([VC isKindOfClass:[RrCodeValidationVC class]] ||
+                [VC isKindOfClass:[PostUserInfoVC class]]) {
+                [navArr removeObject:VC];
             }
+//            if ([VC isKindOfClass:[LoginVC class]]){
+//                [navArr addObject:VC];
+//            }else if([VC isKindOfClass:[CheckUserInfoVC class]]){
+//                [navArr addObject:VC];
+//            }else if([VC isKindOfClass:[MineViewController class]]){
+//                [navArr addObject:VC];
+//            }
         }
         self.navigationController.viewControllers = navArr;
     }
@@ -326,7 +332,7 @@
         
         UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, iPH(27), 300, iPH(22))];
         titleLabel.text = SPostTitle_cell;
-        titleLabel.font = [UIFont systemFontOfSize:20];
+        titleLabel.font = KFont20;
         titleLabel.textColor = [UIColor c_mianblackColor];
         [_imageBarView addSubview:titleLabel];
         

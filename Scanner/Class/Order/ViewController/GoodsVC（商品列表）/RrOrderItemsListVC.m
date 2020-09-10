@@ -10,9 +10,10 @@
 #import "RrOrderItemsListCell.h"
 #import "RrOrderItemsListModel.h"
 #import "RrOrderListDetailVC.h"
-@interface RrOrderItemsListVC ()<UITableViewDelegate,UITableViewDataSource,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface RrOrderItemsListVC ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, assign) NSInteger pageNum;
 @property (nonatomic, assign) BOOL isHeadRefreshing; // 头部刷新
+@property (nonatomic, strong) UILabel *emptyDataLabel;
 @end
 
 @implementation RrOrderItemsListVC
@@ -33,6 +34,7 @@
 - (void)setModel:(OrderVCModel *)model{
     _model = model;
     self.tableView.width = self.view.width;
+    self.emptyDataLabel.centerX = self.tableView.width/2.0f;
     [self.tableView.mj_header beginRefreshing];
 }
 
@@ -57,8 +59,6 @@
         self.isHeadRefreshing = NO;
         [self postProductListUrl];
     }];
-    self.tableView.emptyDataSetSource = self;
-    self.tableView.emptyDataSetDelegate = self;
 }
 
 
@@ -98,28 +98,23 @@
 }
 
 
-// MARK: 空白页显示详细描述
-- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
-    NSString *text = @"暂无相关产品昵";
-    
-    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
-    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
-    paragraph.alignment = NSTextAlignmentCenter;
-    
-    NSDictionary *attributes = @{
-        NSFontAttributeName:KFont19,
-        NSForegroundColorAttributeName:[UIColor c_GrayNotfiColor],
-        NSParagraphStyleAttributeName:paragraph
-    };
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
-}
-// 向上偏移量为表头视图高度/2
-- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView {
-    return -self.tableView.height/2.0+78;
-}
 
-
+//空数据显示
+- (UILabel *)emptyDataLabel{
+    if (!_emptyDataLabel) {
+        _emptyDataLabel = [[UILabel alloc] init];
+        _emptyDataLabel.frame = CGRectMake(0, 60, 200, 30);
+        _emptyDataLabel.centerX = self.tableView.width/2.0f;
+        _emptyDataLabel.textAlignment = NSTextAlignmentCenter;
+        _emptyDataLabel.text =  @"暂无相关产品昵";
+        _emptyDataLabel.textColor = [UIColor c_GrayNotfiColor];
+        _emptyDataLabel.font = KFont19;
+        _emptyDataLabel.backgroundColor = [UIColor clearColor];
+        _emptyDataLabel.hidden = YES;
+        
+    }
+    return _emptyDataLabel;
+}
 #pragma mark UI
 - (UITableView *)tableView{
     if (!_tableView) {//UITableViewStyleGrouped
@@ -134,6 +129,7 @@
         _tableView.backgroundColor = [UIColor mian_BgColor];
         [_tableView addLine_left];
         [_tableView addLine_right];
+        [_tableView addSubview:self.emptyDataLabel];
     }
     return _tableView;
 }
@@ -169,6 +165,7 @@
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 @strongify(self);
+                self.emptyDataLabel.hidden = self.listArr.count;
                 [self.tableView reloadData];
             });
         }

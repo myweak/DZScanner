@@ -16,7 +16,10 @@
     self.nameTextField.delegate = self;
     self.phoneTextField.delegate = self;
     self.phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
+    self.nameTextField.font = KFont20;
+    self.phoneTextField.font = KFont20;
+    self.addressTextField.font = KFont20;
+
 }
 - (void)setPostModel:(RrDidProductDeTailModel *)postModel{
     _postModel = postModel;

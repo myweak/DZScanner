@@ -272,9 +272,12 @@
     [[RRNetWorkingManager sharedSessionManager] deleteAdressList:parameter result:ResultBlockMake(^(NSDictionary * _Nonnull dict, RrResponseModel * _Nonnull responseModel, NSError * _Nonnull error) {
         [SVProgressHUD dismiss];
         if (!error) {
+            if ([aUser.userAddressMdoel.ID isEqualToString:model.ID]) {
+                aUser.userAddressMdoel = nil;
+            };
             !self.backSaveSucceedBlock ?: self.backSaveSucceedBlock();
-                 [self.navigationController popViewControllerAnimated:YES];
-             }
+            [self.navigationController popViewControllerAnimated:YES];
+        }
         showMessage(responseModel.msg);
     }, nil)];
 }

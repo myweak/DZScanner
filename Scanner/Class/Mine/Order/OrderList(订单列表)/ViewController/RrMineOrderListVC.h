@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RrMineOrderListVC : MainViewController
 @property (nonatomic, strong) NSArray *statusSet; // 状态数组
+@property (nonatomic, strong) UITableView *tableView;
+
 @end
 
 NS_ASSUME_NONNULL_END

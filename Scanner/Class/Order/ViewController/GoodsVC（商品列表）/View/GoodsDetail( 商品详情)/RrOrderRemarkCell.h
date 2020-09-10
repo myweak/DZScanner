@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RrOrderRemarkCell : UITableViewCell <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *textView;
+@property (weak, nonatomic) IBOutlet UILabel *remarkTitleLabel; //备注，标题
+
 @property (nonatomic, strong) RrDidProductDeTailModel *postModel; //提交数据模型
 
 @end

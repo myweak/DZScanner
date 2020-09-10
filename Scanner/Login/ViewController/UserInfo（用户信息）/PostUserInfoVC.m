@@ -21,6 +21,7 @@
 #import "MZAvatarImagePicker.H"
 #import "CheckUserInfoVC.h"  // 审核中vc
 #import "RrAddImageView.h"
+#import "RegistVC.h"
 
 @interface PostUserInfoVC ()<UITableViewDelegate,UITableViewDataSource,OTAvatarImagePickerDelegate>
 
@@ -37,8 +38,6 @@
 @property (nonatomic, strong) UIImageView *headImageView;
 
 @property (nonatomic, strong) UIView *bottomView;
-
-@property (nonatomic, strong) UIButton  *addPhotoBtn;
 
 @property (nonatomic, copy)   NSString *headImageUrl;
 @property (nonatomic, strong) NSMutableArray *imageArr;
@@ -69,15 +68,19 @@
     ];
     self.tableView.tableHeaderView = self.headView;
     
-    
-    NSMutableArray *navArr = [NSMutableArray array];
+
+    NSMutableArray *navArr = [NSMutableArray arrayWithArray: self.navigationController.viewControllers];
     for (UIViewController *VC in self.navigationController.viewControllers) {
         NSLog(@"-----%@",VC);
-        if ([VC isKindOfClass:[LoginVC class]]){
-            [navArr addObject:VC];
-        }else if([VC isKindOfClass:[PostUserInfoVC class]]){
-            [navArr addObject:VC];
+        if ([VC isKindOfClass:[RegistVC class]]){
+            [navArr removeObject:VC];
         }
+        
+//        if ([VC isKindOfClass:[LoginVC class]]){
+//            [navArr addObject:VC];
+//        }else if([VC isKindOfClass:[PostUserInfoVC class]]){
+//            [navArr addObject:VC];
+//        }
     }
     self.navigationController.viewControllers = navArr;
     
@@ -282,6 +285,7 @@
         _addView_data.titleLabel.keywordsColor = [UIColor c_redColor];
         [_addView_data.titleLabel reloadUIConfig];
         @weakify(self)
+        _addView_data.addPView.isCanEdite = YES;
         _addView_data.complemntBlock = ^(RrAddImageView *photoView) {
             @strongify(self)
             self.isChangeAddImage = YES;

@@ -7,14 +7,31 @@
 //
 
 #import "RrMineOrderDetailAdressCell.h"
+#import "OYCountDownManager.h"
+
+@interface RrMineOrderDetailAdressCell()
+@property (weak, nonatomic) IBOutlet UIView *timeView;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@end
 
 @implementation RrMineOrderDetailAdressCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+    self.nameLabel.font =KFont20;
+    self.phoneLabel.font =KFont20;
+    self.adressLabel.font =KFont20;
+    self.leftBtn.titleLabel.font =KFont20;
+    self.rightBtn.titleLabel.font =KFont20;
+
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.leftBtn.layer.borderWidth = 1.0f;
     self.leftBtn.layer.borderColor = [UIColor c_lineColor].CGColor;
+    
+    self.timeView.layer.borderWidth = 1.0f;
+    self.timeView.layer.borderColor = [UIColor c_lineColor].CGColor;
+     
     
     self.rightBtn.layer.borderWidth = 1.0f;
     self.rightBtn.layer.borderColor = [UIColor c_btn_Bg_Color].CGColor;
@@ -35,6 +52,7 @@
         return;
     }
     NSString *rightStr = @"";
+    self.timeView.hidden = YES;
     self.leftBtn.hidden = YES;
     self.bottomViewBg.hidden = NO;
     switch ([self.model.orderStatus intValue]) {
@@ -51,6 +69,9 @@
         case 3://待付款
             if ([self.model.payType intValue] == 1) {//支付方式:1在线支付，2线下支付
                 self.bottomViewBg.hidden = NO;
+                if (self.model.timePut) {
+                    self.timeView.hidden = NO;
+                }
                 rightStr = @"支付提醒";
             }else{
                 self.bottomViewBg.hidden = YES;
@@ -91,5 +112,73 @@
 
     // Configure the view for the selected state
 }
+
+
+#pragma mark - 付款提醒 倒计时逻辑
+
+// xib创建
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        // 监听通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countDownNotification:) name:OYCountDownNotification object:nil];
+    }
+    return self;
+}
+
+#pragma mark - 倒计时通知回调
+- (void)startTime{
+    [kCountDownManager start];
+    [kCountDownManager addSourceWithIdentifier:self.model.outTradeNo];
+    [kCountDownManager reloadSourceWithIdentifier:self.model.outTradeNo];
+    self.model.timePut = YES;
+    self.timeView.hidden = NO;
+
+    [self countDownNotification:nil];
+}
+- (void)countDownNotification: (NSNotification *) notify{
+    
+    /// 判断是否需要倒计时 -- 可能有的cell不需要倒计时,根据真实需求来进行判断
+    if (0) {
+        return;
+    }
+    /// 计算倒计时
+    NSInteger timeInterval = 0;
+    if ([kCountDownManager getIdentifierObject:self.model.outTradeNo]) {
+        NSLog(@"----%@",self.model.outTradeNo);
+        timeInterval = [kCountDownManager timeIntervalWithIdentifier:self.model.outTradeNo];
+        
+        NSInteger countDown = KTimeInterval - timeInterval;
+        self.model.timePut = YES;
+        self.timeView.hidden = NO;
+
+        /// 当倒计时到了进行回调
+        if (countDown < 0) {
+            [kCountDownManager removeSourceWithIdentifier:self.model.outTradeNo];
+            self.model.timePut = NO;
+            self.timeView.hidden = YES;
+            // 回调给控制器
+            if (self.countDownZero) {
+                self.countDownZero(self.model);
+            }
+            return;
+        }
+        /// 重新赋值
+        NSString *title = [NSString stringWithFormat:@"%ld",countDown];
+//        [self.rightBtn setTitle:title forState:UIControlStateNormal];
+        self.timeLabel.text = title;
+    }else{
+        self.model.timePut = NO;
+        self.timeView.hidden = YES;
+    }
+}
+
+
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 
 @end

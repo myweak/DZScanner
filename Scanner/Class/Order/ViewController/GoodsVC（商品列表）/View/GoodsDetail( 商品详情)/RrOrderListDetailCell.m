@@ -15,6 +15,9 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     [self.detailView addSubview:self.webView];
     self.detailView_H.constant = self.webView.height;
+    self.titleLabels.font = KFont20;
+    self.subLabel.font = KFont20;
+    self.priceLabel.font = KFont20;
 
 }
 - (WKWebView *)webView{

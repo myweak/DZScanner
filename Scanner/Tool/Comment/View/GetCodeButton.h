@@ -26,6 +26,8 @@ typedef NS_ENUM(NSInteger,GetCodeButtonType){
 @property (nonatomic, copy) NSString *timeTipsStr;
 @property (nonatomic, assign) NSInteger customType;
 
+@property (nonatomic, assign) CGFloat countTime; //倒计时总时间。默认60s
+
 - (void)counting;
 
 - (void)reset;

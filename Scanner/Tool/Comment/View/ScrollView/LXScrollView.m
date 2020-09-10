@@ -59,6 +59,7 @@
         _contentScroller.showsHorizontalScrollIndicator = NO;
         _contentScroller.pagingEnabled = YES;
         _contentScroller.delegate = self;
+        _contentScroller.scrollEnabled = NO;
     }
     return _contentScroller;
 }

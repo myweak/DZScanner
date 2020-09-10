@@ -23,6 +23,13 @@
 - (void)updateUserType:(id)parameter result:(RrResponseResultBlockModel *)resultBlock{
     [self GET:@"/dz-service/worker/staff/login" parameters:parameter result:resultBlock];
 }
+
+- (void)outLogin:(id)parameter result:(RrResponseResultBlockModel *)resultBlock{
+    [self POST:@"/api-uaa/oauth/remove/token" parameters:parameter result:resultBlock];
+}
+
+
+
 - (void)getCode:(id)parameter basicToken:(BOOL)isBasicToken result:(RrResponseResultBlockModel *)resultBlock{
 //    [self GET:@"/api-uaa/register/send" parameters:parameter result:resultBlock];
     [self GETBasicToken:isBasicToken URLString:@"/api-uaa/register/send" parameters:parameter result:resultBlock];

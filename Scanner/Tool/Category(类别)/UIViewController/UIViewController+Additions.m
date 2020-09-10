@@ -171,13 +171,13 @@
 
 -(void)setHidenLeftTaBar:(BOOL)hidenLeftTaBar
 {
-
+    
+    [UserDataManager sharedManager].frame_width =  hidenLeftTaBar ? KScreenWidth:(KScreenWidth -KTabar_Width);
     MainTabBarVC *tabar = (MainTabBarVC *)KWindow.rootViewController;
      tabar.tabBarController.hiddenTabBar = hidenLeftTaBar;
-    [UserDataManager sharedManager].frame_width =  hidenLeftTaBar ? KScreenWidth:(KScreenWidth -KTabar_Width);
     self.view.width = hidenLeftTaBar ? KScreenWidth:(KScreenWidth -KTabar_Width);
 
-//    NSLog(@"<<<<%@>>>>=========>%f",NSStringFromClass([self class]),[UserDataManager sharedManager].frame_width );
+    NSLog(@"<<<<%@>>>>=========>%f",NSStringFromClass([self class]),[UserDataManager sharedManager].frame_width );
 }
 
 

@@ -60,6 +60,10 @@
          @strongify(self);
          RrOrderSearchVC *searVc =[RrOrderSearchVC new];
          searVc.type = RrSearchVCType_order;
+         searVc.showPayNotifiBlock = ^(RrMineOrderListModel * model) {
+             @strongify(self);
+             
+         };
          [self.navigationController pushViewController:searVc animated:YES];
      }];
 
@@ -89,8 +93,14 @@
     RrMineOrderListVC *listVc = self.listVC[index];
     return listVc.view;
 }
+/** 点击分选框标题
+*  index 0~titles.count-1
+*/
 - (void)gsSortViewDidScroll:(NSInteger)index{
     NSLog(@"click ======== %ld",index);
+    RrMineOrderListVC *listVc = self.listVC[index];
+    [listVc.tableView.mj_header beginRefreshing];
+    
 }
 
 

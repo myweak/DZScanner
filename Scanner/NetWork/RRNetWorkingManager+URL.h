@@ -43,6 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)codeLogin:(id)parameter result:(RrResponseResultBlockModel *)resultBlock;
 
 /**
+注销凭证信息 退出登陆
+
+@param parameter phone code
+*/
+- (void)outLogin:(id)parameter result:(RrResponseResultBlockModel *)resultBlock;
+
+/**
 手机忘记密码
 
 @param parameter  phone code password

@@ -13,6 +13,8 @@
 #include <net/if_dl.h>
 #import "sys/utsname.h"
 
+#define kLetterAndNum  @"ALBCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
 @implementation NSString (MyString)
 
 //去空格
@@ -994,6 +996,11 @@
     return ([self rangeOfCharacterFromSet:numbersCharacterSet].location == NSNotFound);
 }
 
+- (BOOL)isLetterAndNum
+{
+    NSCharacterSet *numbersCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:kLetterAndNum] invertedSet];
+    return ([self rangeOfCharacterFromSet:numbersCharacterSet].location == NSNotFound);
+}
 
 
 // 时间戳 ---> 2020-3-4 16:05:05

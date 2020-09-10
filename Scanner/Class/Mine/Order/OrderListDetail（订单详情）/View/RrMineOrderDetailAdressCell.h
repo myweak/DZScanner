@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RrMineOrderListCellBlock backBlock;
 @property (nonatomic, strong) RrDidProductDeTailModel *model;
 
+
+/// 倒计时到0时回调
+@property (nonatomic, copy) void(^countDownZero)(RrDidProductDeTailModel *);
+- (void)startTime;//开始倒计时
+
 @end
 
 NS_ASSUME_NONNULL_END

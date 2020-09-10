@@ -282,8 +282,6 @@
                              NSLog(@"-----%@",VC);
                              if ([VC isKindOfClass:[LoginVC class]]){
                                  [navArr removeObject:VC];
-                             }else if([VC isKindOfClass:[RrCodeValidationVC class]]){
-                                 [navArr removeObject:VC];
                              }
                          }
                          self.navigationController.viewControllers = [navArr mutableCopy];

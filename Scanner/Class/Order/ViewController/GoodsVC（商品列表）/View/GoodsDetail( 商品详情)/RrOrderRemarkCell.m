@@ -14,6 +14,8 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.textView.placeholder = @"请输入你需要备注的信息";
     self.textView.delegate = self;
+    self.textView.font = KFont20;
+    self.remarkTitleLabel.font = KFont20;
 }
 
 

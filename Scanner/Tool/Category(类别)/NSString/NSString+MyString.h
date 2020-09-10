@@ -161,6 +161,8 @@ static inline NSString *NAStringFromDate(NSString *dateFormat, NSDate *date) {
 - (NSString *)phoneNumberFormat;
 //仅包含数字
 - (BOOL)containsOnlyNumbers;
+//仅包含数字和字母
+- (BOOL)isLetterAndNum;
 
 // 时间戳 ---> 2020-3-4 16:05:05
 - (NSString *)dateStringFromTimeYMDHMS;

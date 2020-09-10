@@ -7,7 +7,8 @@
 //
 
 #import "RrChangeWordVC.h"
-#import "RrSettingVC.h"
+#import "FindPassWordVC.h"
+#import "RrCodeValidationVC.h"
 @interface RrChangeWordVC ()
 @property (weak, nonatomic) IBOutlet UIView *oneViewBg;
 @property (weak, nonatomic) IBOutlet UIView *twoViewBg;
@@ -59,17 +60,22 @@
     self.textfieldTwo.secureTextEntry = YES;
     self.textfieldTwo.keyboardType =  UIKeyboardTypeNumberPad;
     
-    NSMutableArray *navArr = [NSMutableArray array];
+    NSMutableArray *navArr = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
     for (UIViewController *VC in self.navigationController.viewControllers) {
-        if ([VC isKindOfClass:[LoginVC class]]){
-            [navArr addObject:VC];
-        }else if([VC isKindOfClass:[RrSettingVC class]]){
-            [navArr addObject:VC];
-        }else if([VC isKindOfClass:[RrChangeWordVC class]]){
-            [navArr addObject:VC];
-        }else if([VC isKindOfClass:[MineViewController class]]){
-            [navArr addObject:VC];
+        NSLog(@"-----%@",VC);
+        if ([VC isKindOfClass:[FindPassWordVC class]] ||
+            [VC isKindOfClass:[RrCodeValidationVC class]]){
+            [navArr removeObject:VC];
         }
+//        if ([VC isKindOfClass:[LoginVC class]]){
+//            [navArr addObject:VC];
+//        }else if([VC isKindOfClass:[RrSettingVC class]]){
+//            [navArr addObject:VC];
+//        }else if([VC isKindOfClass:[RrChangeWordVC class]]){
+//            [navArr addObject:VC];
+//        }else if([VC isKindOfClass:[MineViewController class]]){
+//            [navArr addObject:VC];
+//        }
     }
     self.navigationController.viewControllers = navArr;
     

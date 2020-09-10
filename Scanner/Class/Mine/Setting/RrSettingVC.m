@@ -118,7 +118,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSString *title = self.dataTitleArr[indexPath.row];
-    
+    @weakify(self)
     if ([title isEqualToString:SPushMessage_title]) {
         RrSettingJPushVC *pushVc =[RrSettingJPushVC new];
         pushVc.title = SPushMessage_title;
@@ -136,18 +136,6 @@
                 });
             }
         }];
-//        [SDWebImageManager.sharedManager.imageCache
-//
-//        culateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
-//
-//           }];
-//        [SDWebImageManager.sharedManager.imageCache ]
-
-//        [[[SDWebImageManager sharedManager] imageCache] totalDiskSize];
-//        [[[SDWebImageManager sharedManager] imageCache] totalDiskCount];
-//        [[[SDWebImageManager sharedManager] imageCache] clearMemory];
-//        [[[SDWebImageManager sharedManager] imageCache] clearDisk];
-        
     }else if ([title isEqualToString:SChangeWord_title]) {
         RrCodeValidationVC *codeVc =[RrCodeValidationVC new];
         codeVc.phoneNum = aUser.phone;
@@ -155,7 +143,8 @@
         codeVc.type = RrCodeValidationVC_forget;
         [self.navigationController pushViewController:codeVc animated:YES];
     }else if ([title isEqualToString:SOutLogin_title]) {
-        [self pushToLonginVC];
+        [self outLoginUrlWithBlock:nil];
+        [[UserDataManager sharedManager] psuhLoginVC];
         
     }else if ([title isEqualToString:SSuggestion_title]) {
         RrSuggestionVC *sugVc = [RrSuggestionVC new];
@@ -206,6 +195,13 @@
     login.hidenLeftTaBar = YES;
     [login addPsuhVCAnimationFromTop];
     [self.navigationController pushViewController:login animated:NO];
+}
+
+
+#pragma mark - 网络url
+//通知服务器 退出。不用关心它能付成功
+- (void)outLoginUrlWithBlock:(void(^)(BOOL succes)) block{
+    [[RRNetWorkingManager sharedSessionManager] outLogin:nil result:NULL];
 }
 
 

@@ -52,7 +52,7 @@
             self.orderStatus_Str = @"制作完成";
             break;
         case 7:
-            self.orderStatus_Str = @"完成";
+            self.orderStatus_Str = @"已完成";
             break;
             
         default:

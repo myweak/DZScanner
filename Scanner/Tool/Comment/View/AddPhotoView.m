@@ -249,7 +249,7 @@
                 self.addPhotoViewSelectedBlock(imageView.tag);
                 return;
             }
-            [self selectedImageView:imageView Index:imageView.tag];
+            [self selectedImageView:imageView.imageView Index:imageView.tag];
         }];
         
         

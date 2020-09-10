@@ -50,7 +50,7 @@
     
 
     
-    self.URLRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]];
+    self.URLRequest = [NSURLRequest requestWithURL:urlStr.url];
     [self.webView loadRequest:self.URLRequest];
     [self.view addSubview:self.webView];
     

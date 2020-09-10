@@ -7,12 +7,20 @@
 //
 
 #import "RrOrderPayTypeCell.h"
+@interface RrOrderPayTypeCell ()
+@property (weak, nonatomic) IBOutlet UILabel *payTitleLabel;
+
+@end
 
 @implementation RrOrderPayTypeCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.payTitleLabel.font =KFont20;
+    self.onLinePayLBtn.titleLabel.font = KFont20;
+    self.offLinePayBtn.titleLabel.font = KFont20;
+
     self.onLinePayLBtn.selected = YES;
     [self.contenViewBg bezierPathWithRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadius:7.0f];
     

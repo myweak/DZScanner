@@ -72,7 +72,7 @@
         [[UIScrollView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
     }
     
-    if (![RrUserTypeModel isLogin] || ![TZUserDefaults getBoolValueInUDWithKey:KUserDefaul_Key_agreement]) {
+    if (![RrUserDataModel isLogin] || ![TZUserDefaults getBoolValueInUDWithKey:KUserDefaul_Key_agreement]) {
         self.window.rootViewController = [[LXNavigationController alloc] initWithRootViewController: self.login];
     }else{
         self.window.rootViewController = self.tabarVc;
@@ -223,9 +223,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [application cancelAllLocalNotifications];
 }
 
-//接收推动结果
+//接收推送结果
 - (void)ReceiveNotificationResponsePushToVCWithDict:(NSDictionary *)userInfo{
-    if ([RrUserTypeModel isLogin]) {
+    if ([RrUserDataModel isLogin]) {
        typeJsonMdoel *model =  [typeJsonMdoel mj_objectWithKeyValues:[userInfo valueForKey:@"msgJson"]];
         [typeJsonMdoel patchMessageUrlWithID:model.ID];//标为已读
         UIViewController *vc =[UIViewController visibleViewController];

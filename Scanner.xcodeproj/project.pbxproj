@@ -235,6 +235,7 @@
 		0096180C24D3CA2000999E61 /* RrMineOrderListDetailEdittingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0096180B24D3CA2000999E61 /* RrMineOrderListDetailEdittingVC.m */; };
 		0096181024D409F500999E61 /* TZNotNetworkView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0096180E24D409F500999E61 /* TZNotNetworkView.m */; };
 		0096181124D409F500999E61 /* TZNotNetworkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0096180F24D409F500999E61 /* TZNotNetworkView.xib */; };
+		009F239C2507593A00F6C1A4 /* OYCountDownManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 009F239B2507593A00F6C1A4 /* OYCountDownManager.m */; };
 		00B6D06624C7E8460071A28B /* Triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00B6D06124C7E8460071A28B /* Triangle.cpp */; };
 		00B6D06724C7E8460071A28B /* CSTL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00B6D06224C7E8460071A28B /* CSTL.cpp */; };
 		00B6D06824C7E8460071A28B /* Obj2Stl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00B6D06324C7E8460071A28B /* Obj2Stl.cpp */; };
@@ -684,6 +685,8 @@
 		0096180D24D409F500999E61 /* TZNotNetworkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZNotNetworkView.h; sourceTree = "<group>"; };
 		0096180E24D409F500999E61 /* TZNotNetworkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZNotNetworkView.m; sourceTree = "<group>"; };
 		0096180F24D409F500999E61 /* TZNotNetworkView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TZNotNetworkView.xib; sourceTree = "<group>"; };
+		009F239A2507593A00F6C1A4 /* OYCountDownManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OYCountDownManager.h; sourceTree = "<group>"; };
+		009F239B2507593A00F6C1A4 /* OYCountDownManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OYCountDownManager.m; sourceTree = "<group>"; };
 		00B6D05C24C7E8460071A28B /* CSTL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CSTL.hpp; sourceTree = "<group>"; };
 		00B6D05D24C7E8460071A28B /* Obj2Stl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Obj2Stl.hpp; sourceTree = "<group>"; };
 		00B6D05E24C7E8460071A28B /* DModel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DModel.hpp; sourceTree = "<group>"; };
@@ -942,6 +945,8 @@
 			children = (
 				00010DA724BDBA6000E7AB40 /* LXObjectTools.h */,
 				00010DA824BDBA6000E7AB40 /* LXObjectTools.m */,
+				009F239A2507593A00F6C1A4 /* OYCountDownManager.h */,
+				009F239B2507593A00F6C1A4 /* OYCountDownManager.m */,
 			);
 			path = Object;
 			sourceTree = "<group>";
@@ -2622,6 +2627,7 @@
 				0013A38024B59AFB003DC01C /* CTAssetsGridView.m in Sources */,
 				6A6A31B724A319F8001D6D93 /* RrResponseModel.m in Sources */,
 				6A705A7D24A9AB6700624712 /* NSString+RrBase.m in Sources */,
+				009F239C2507593A00F6C1A4 /* OYCountDownManager.m in Sources */,
 				002006DC24C68BC3006A3CFB /* CalibrationOverlay.mm in Sources */,
 				00010DA924BDBA6000E7AB40 /* LXObjectTools.m in Sources */,
 				00F5F6CC24C02FFD0029FF30 /* RrChangeWordVC.m in Sources */,
